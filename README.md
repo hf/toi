@@ -1,5 +1,7 @@
 # Toi
 
+[![Build Status](https://travis-ci.org/hf/toi.svg?branch=master)](https://travis-ci.org/hf/toi)
+
 A TypeScript validation library capable of inferring types.
 
 ## License
