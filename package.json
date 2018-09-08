@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "workspaces": ["packages/toi", "packages/toix"],
+  "scripts": {
+    "build": "wsrun build",
+    "coverage": "wsrun coverage"
+  },
+  "devDependencies": {
+    "wsrun": "^2.2.1"
+  }
+}
