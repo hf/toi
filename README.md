@@ -1,5 +1,7 @@
 # Toi
 
+[![Build Status](https://travis-ci.org/hf/toi.svg?branch=master)](https://travis-ci.org/hf/toi) [![codecov](https://codecov.io/gh/hf/toi/branch/master/graph/badge.svg)](https://codecov.io/gh/hf/toi)
+
 Toi is a validator for JavaScript values written in TypeScript.
 
 It's heavily inspired by [Joi](https://github.com/hapijs/joi), but actually

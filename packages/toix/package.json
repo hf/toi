@@ -6,7 +6,8 @@
   "files": "build/**/*.{js,js.map,d.ts,d.ts.map}",
   "scripts": {
     "build": "tsc",
-    "coverage": "nyc check-coverage --lines 100 --branches 100 --functions 100 --statements 100 mocha --require source-map-support/register --recursive build/**/*.spec.{js,jsx}"
+    "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.{js,jsx}",
+    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,7 @@
     "include": ["build/**/*.js"],
     "exclude": ["build/**/*.spec.js", "build/**/*.spec.jsx"],
     "extension": [".js", ".jsx"],
-    "reporter": ["text-summary", "html"],
+    "reporter": ["text-summary", "html", "lcovonly"],
     "sourceMap": true,
     "instrument": true
   }

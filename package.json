@@ -3,7 +3,8 @@
   "workspaces": ["packages/toi", "packages/toix"],
   "scripts": {
     "build": "wsrun build",
-    "coverage": "wsrun coverage"
+    "coverage": "wsrun coverage",
+    "test": "wsrun test"
   },
   "devDependencies": {
     "wsrun": "^2.2.1"
