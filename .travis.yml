@@ -1,22 +1,20 @@
 language: node_js
-
 node_js:
-  - "8"
-  - "10"
-  - "node"
-
+  - node
 before_install:
   - npm install -g codecov
-
 install:
   - yarn install --pure-lockfile
-
 before_script:
   - yarn build
-
 script:
   - yarn test
   - yarn coverage
-
 after_success:
   - codecov
+deploy:
+  provider: script
+  script:
+    - bash scripts/deploy.sh
+  on:
+    branch: master

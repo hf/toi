@@ -1,9 +1,9 @@
 {
-  "name": "toi",
-  "version": "1.0.0",
+  "name": "@toi/toi",
+  "version": "1.0.2",
   "description": "Toi is a validator for TypeScript.",
   "main": "build/index.js",
-  "files": "build/**/*.{js,js.map,d.ts,d.ts.map}",
+  "files": ["build/**/*.{js,js.map,d.ts,d.ts.map}", "LICENSE", "README.md"],
   "scripts": {
     "build": "tsc",
     "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.{js,jsx}",

@@ -12,9 +12,9 @@ of a validation schema.
 
 It comes in two related packages:
 
-- `toi` which contains the most basic validators. You can see the source in
+- `@toi/toi` which contains the most basic validators. You can see the source in
   `packages/toi`.
-- `toix` which contains extra and commonly used validators. You can see the
+- `@toi/toix` which contains extra and commonly used validators. You can see the
   source in `packages/toix`.
 
 Unlike Joi, it takes a more flexible and monadic approach to building
@@ -49,7 +49,7 @@ Let's take a look at some common patterns and how they work with Toi.
 Here's a validation schema for all objects of the form `{ num: number; str: string }`.
 
 ```typescript
-import * as toi from "toi";
+import * as toi from "tois";
 
 const isObject = toi
   .required() // make toi reject null or undefined

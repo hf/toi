@@ -2,7 +2,7 @@
  * ToiX -- extra validators for Toi.
  */
 
-import { wrap, allow, transform } from "toi";
+import { wrap, allow, transform } from "@toi/toi";
 import * as isemail from "isemail";
 
 /**

@@ -1,9 +1,9 @@
 {
-  "name": "toix",
-  "version": "1.0.0",
+  "name": "@toi/toix",
+  "version": "1.0.2",
   "description": "Extra validators for Toi.",
   "main": "build/index.js",
-  "files": "build/**/*.{js,js.map,d.ts,d.ts.map}",
+  "files": ["build/**/*.{js,js.map,d.ts,d.ts.map}", "LICENSE", "README.md"],
   "scripts": {
     "build": "tsc",
     "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.{js,jsx}",
@@ -17,7 +17,7 @@
   "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "toi": "^1.0.0",
+    "@toi/toi": "^1.0.0",
     "isemail": "^3.1.3"
   },
   "devDependencies": {

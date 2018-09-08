@@ -1,6 +1,6 @@
 import "mocha";
 
-import * as toi from "toi";
+import * as toi from "@toi/toi";
 import * as toix from "./index";
 
 function equality(a: any, b: any): boolean {

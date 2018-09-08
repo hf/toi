@@ -4,9 +4,13 @@
   "scripts": {
     "build": "wsrun build",
     "coverage": "wsrun coverage",
-    "test": "wsrun test"
+    "test": "wsrun test",
+    "publish": "wsrun publish"
   },
   "devDependencies": {
     "wsrun": "^2.2.1"
+  },
+  "dependencies": {
+    "travis": "^0.1.1"
   }
 }
