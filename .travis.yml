@@ -10,6 +10,9 @@ before_script:
 script:
   - yarn test
   - yarn coverage
+  - yarn prettier
+  - bash scripts/package-version.sh @toi/toi packages/toi
+  - bash scripts/package-version.sh @toi/toix packages/toix
 after_success:
   - codecov
 deploy:
