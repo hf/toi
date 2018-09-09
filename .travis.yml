@@ -12,6 +12,8 @@ jobs:
         - yarn coverage
         - codecov
         - yarn prettier
+        - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash scripts/package-version.sh @toi/toi packages/toi; fi'
+        - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash scripts/package-version.sh @toi/toix packages/toix; fi'
     - stage: deploy
       script:
         - yarn install --pure-lockfile
