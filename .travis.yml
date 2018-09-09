@@ -1,22 +1,24 @@
 language: node_js
 node_js:
   - node
-before_install:
-  - npm install -g codecov
-install:
-  - yarn install --pure-lockfile
-before_script:
-  - yarn build
-script:
-  - yarn test
-  - yarn coverage
-  - codecov
-  - yarn prettier
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then scripts/package-version.sh @toi/toi packages/toi; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then scripts/package-version.sh @toi/toix packages/toix; fi'
-deploy:
-  provider: script
-  script:
-    - bash scripts/deploy.sh
-  on:
-    branch: master
+jobs:
+  include:
+    - stage: test
+      script: 
+        - npm install -g codecov
+        - yarn install --pure-lockfile
+        - yarn build
+        - yarn test
+        - yarn coverage
+        - codecov
+        - yarn prettier
+    - stage: deploy
+      script:
+        - yarn install --pure-lockfile
+        - yarn build
+        - bash scripts/deploy.sh
+stages:
+  - name: test
+    if: (type = pull_request) OR ((type = push) AND (branch = master))
+  - name: deploy
+    if: branch = master
