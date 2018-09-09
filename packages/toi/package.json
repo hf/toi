@@ -1,6 +1,6 @@
 {
   "name": "@toi/toi",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Toi is a validator for TypeScript.",
   "main": "build/index.js",
   "files": ["build/**/*.{js,js.map,d.ts,d.ts.map}", "LICENSE", "README.md"],
