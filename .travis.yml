@@ -10,8 +10,10 @@ before_script:
 script:
   - yarn test
   - yarn coverage
-after_success:
   - codecov
+  - yarn prettier
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then scripts/package-version.sh @toi/toi packages/toi; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then scripts/package-version.sh @toi/toix packages/toix; fi'
 deploy:
   provider: script
   script:

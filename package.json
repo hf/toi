@@ -3,6 +3,7 @@
   "workspaces": ["packages/toi", "packages/toix"],
   "scripts": {
     "build": "wsrun build",
+    "prettier": ["prettier -l **/*"],
     "coverage": "wsrun coverage",
     "test": "wsrun test",
     "publish": "wsrun publish"

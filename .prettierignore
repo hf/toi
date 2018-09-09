@@ -1,0 +1,8 @@
+node_modules
+build
+coverage
+LICENSE
+.*
+*.sh
+*.log
+*.lock
