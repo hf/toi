@@ -20,6 +20,23 @@ It comes in two related packages:
 Unlike Joi, it takes a more flexible and monadic approach to building
 validation schemas.
 
+### Install
+
+It's packaged under the organization scope `@toi`. Just do:
+
+```
+# for toi
+yarn add @toi/toi
+npm i --save @toi/toi
+
+# for toix
+yarn add @toi/toix
+npm i --save @toi/toix
+```
+
+The major versions of these two packages will always be in sync. It's
+recommended you use the caret semver. Currently that is: `@^1.0.0`.
+
 ### What's a validation schema?
 
 A validation schema is just a function that has type information about what
@@ -49,7 +66,7 @@ Let's take a look at some common patterns and how they work with Toi.
 Here's a validation schema for all objects of the form `{ num: number; str: string }`.
 
 ```typescript
-import * as toi from "tois";
+import * as toi from "@toi/toi";
 
 const isObject = toi
   .required() // make toi reject null or undefined
