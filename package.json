@@ -5,7 +5,7 @@
     "build": "wsrun build",
     "prettier": ["prettier -l **/*"],
     "coverage": "wsrun coverage",
-    "test": "wsrun test",
+    "test": "wsrun test --serial",
     "publish": "wsrun publish"
   },
   "devDependencies": {

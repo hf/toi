@@ -258,5 +258,12 @@ describe("toix", () => {
         positive: [["", ""], ["a", "a"], ["a ", "a"], [" a", "a"], [" a ", "a"]]
       });
     });
+
+    describe("phoneNumber()", () => {
+      assert(toix.str.phoneNumber(), {
+        positive: ["+8006927753", "+3891234567", "8006927753"],
+        negative: ["+012", "+1", "+", "1", "+1234567891234567"]
+      });
+    });
   });
 });
