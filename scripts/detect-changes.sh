@@ -16,6 +16,8 @@ then
     echo "No changes detected in package $PACKAGE"
   else
     bash "$DIR/package-version.sh" "@toi/$PACKAGE" "packages/$PACKAGE"
-    exit $?
+    EXCODE=$?
+    echo "Exit with $EXCODE"
+    exit $EXCODE
   fi
 fi
