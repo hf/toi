@@ -90,4 +90,19 @@ export namespace str {
    */
   export const trim = <X extends string>() =>
     wrap("str.trim", transform<X, string>(value => value.trim()));
+
+  /**
+   * Checks that a string is a E.164 phone number, i.e. starts with `+` (optional)
+   * a non-zero digit, and followed by a minimum of 3, 2, or 1 digit, at a maximum
+   * of 15 digits.
+   */
+  export const phoneNumber = <X extends string>() =>
+    wrap(
+      "str.phoneNumber",
+      allow<X, X>(
+        value =>
+          !!value.match(/^\+?[1-9]([0-9]{3,14}|[0-9]{2,14}|[0-9]{1,14})$/),
+        "value does not match E.164 numbering plan"
+      )
+    );
 }
