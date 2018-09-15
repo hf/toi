@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=`dirname "$0"`
+DIR=$(dirname $(readlink -f $0))
 
 bash $DIR/package-version.sh @toi/toi packages/toi
 TOI_VERSION=$?
