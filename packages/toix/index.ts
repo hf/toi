@@ -26,6 +26,20 @@ export namespace str {
     );
 
   /**
+   * Checks if the value is a valid URL. Uses 
+   * RegExp. Should we consider using a module?
+   */
+  export const is_url = <X extends string>() =>
+    wrap(
+      "str.is_url",
+      allow<X, X>(
+        value =>
+          !!value.match(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/),
+        "value is not an URL"
+      )
+    );
+
+  /**
    * Checks that the value is a GUID. By default it accepts any version of GUID and does not
    * accept the nil GUID "00000000-0000-0000-0000-000000000000". Accepts only lowercase
    * GUIDs.

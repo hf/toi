@@ -241,6 +241,26 @@ describe("toix", () => {
       });
     });
 
+    describe("is_url()", () => {
+      assert(toix.str.is_url(), {
+        positive: [
+          "http://www.google.com",
+          "https://www.google.com",
+          "http://google.com",
+          "http://www.google.com/imghp",
+          "http://g.co"
+        ],
+        negative: [
+          "www.google",
+          "http://www.google",
+          "http://google",
+          "www.google#.com",
+          "www.google-.co",
+          "www.-google.co"
+        ]
+      });
+    });
+
     describe("lowercase()", () => {
       transform(toix.str.lowercase(), {
         positive: [["", ""], ["hello", "hello"], ["HELLO", "hello"]]
