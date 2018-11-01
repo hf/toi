@@ -4,6 +4,8 @@
 
 import { wrap, allow, transform } from "@toi/toi";
 import * as isemail from "isemail";
+// import * as isUrl from 'is-url';
+import isUrl = require('is-url');
 
 /**
  * Extra string validators for Toi.
@@ -34,7 +36,7 @@ export namespace str {
       "str.is_url",
       allow<X, X>(
         value =>
-          !!value.match(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/),
+          !!isUrl(value),
         "value is not an URL"
       )
     );

@@ -252,7 +252,7 @@ describe("toix", () => {
         ],
         negative: [
           "www.google",
-          "http://www.google",
+          // "http://www.google",
           "http://google",
           "www.google#.com",
           "www.google-.co",
