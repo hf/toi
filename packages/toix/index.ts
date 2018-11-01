@@ -4,8 +4,7 @@
 
 import { wrap, allow, transform } from "@toi/toi";
 import * as isemail from "isemail";
-// import * as isUrl from 'is-url';
-import isUrl = require('is-url');
+import isUrl from 'is-url';
 
 /**
  * Extra string validators for Toi.
