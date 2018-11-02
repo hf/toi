@@ -2,7 +2,7 @@
  * ToiX -- extra validators for Toi.
  */
 
-import { wrap, allow, transform } from "@toi/toi";
+import { wrap, allow, transform, ValidationError } from "@toi/toi";
 import * as isemail from "isemail";
 
 /**
@@ -24,6 +24,39 @@ export namespace str {
         "value is not an email"
       )
     );
+
+  /**
+   * Checks for a valid URL. Accepts an URL, and optional
+   * parameters like protocol and port.
+   */
+  export const url = <X extends string, R extends string, O extends string>(options: { protocol?: R, port?: O  } = {}) =>
+    wrap(
+      "str.url",
+      transform<X, URL & { protocol: R, port: O }>(
+        value => {
+          try {
+            const url = new URL(value);
+
+            if (options && options.port && options.port !== url.port) {
+              throw new ValidationError(`Invalid port: ${options.port}`, value);
+            }
+
+            if (options && options.protocol && options.protocol !== url.protocol) {
+              throw new ValidationError(`Invalid protocol: ${options.protocol}`, value)
+            }
+
+            return url as URL & { protocol: R, port: O };
+          } catch (error) {
+            if (error instanceof TypeError) {
+              throw new ValidationError("Not a valid URL", value)
+            }
+
+            throw error;
+          }
+        }
+      )
+    );
+
 
   /**
    * Checks that the value is a GUID. By default it accepts any version of GUID and does not

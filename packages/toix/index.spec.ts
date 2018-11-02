@@ -241,6 +241,47 @@ describe("toix", () => {
       });
     });
 
+    describe("url()", () => {
+      assert(toix.str.url(), {
+        positive: [
+          "http://www.google.com",
+          "https://www.google.com",
+          "http://google.com",
+          "http://www.google.com/imghp",
+          "http://g.co",
+        ],
+        negative: [
+          "www.google",
+          "www.google#.com",
+          "www.google-.co",
+          "www.-google.co"
+        ]
+      });
+
+      assert(toix.str.url({ protocol: "http:" }), {
+        positive: [
+          "http://google.com",
+          "http://yahoo.com"
+        ],
+        negative: [
+          "https://google.com",
+          "https://yahoo.com", 
+          "ftp://google.com"
+        ]
+      });
+
+      assert(toix.str.url({ port: '443' }), {
+        positive: [
+          "http://google.com:443",
+          "http://yahoo.com:443"
+        ],
+        negative: [
+          "http://google.com",
+          "http://yahoo.com"
+        ]
+      });
+    });
+
     describe("lowercase()", () => {
       transform(toix.str.lowercase(), {
         positive: [["", ""], ["hello", "hello"], ["HELLO", "hello"]]
