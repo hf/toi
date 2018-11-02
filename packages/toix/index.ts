@@ -26,7 +26,8 @@ export namespace str {
     );
 
   /**
-   * Checks for a valid URL. It can accept an URL, protocol or port.
+   * Checks for a valid URL. Accepts an URL, and optional
+   * parameters like protocol and port.
    */
   export const url = <X extends string, R extends string, O extends string>(options: { protocol?: R, port?: O  } = {}) =>
     wrap(
@@ -37,11 +38,11 @@ export namespace str {
             const url = new URL(value);
 
             if (options && options.port && options.port !== url.port) {
-              throw new ValidationError(`not a ${options.port} port`, value);
+              throw new ValidationError(`Invalid port: ${options.port}`, value);
             }
 
             if (options && options.protocol && options.protocol !== url.protocol) {
-              throw new ValidationError(`not a ${options.protocol} URL`, value)
+              throw new ValidationError(`Invalid protocol: ${options.protocol}`, value)
             }
 
             return url as URL & { protocol: R, port: O };
