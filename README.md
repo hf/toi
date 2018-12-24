@@ -70,9 +70,9 @@ import * as toi from "@toi/toi";
 
 const isObject = toi
   .required() // make toi reject null or undefined
-  .and(toi.object.is()) // forces that the value is an object
+  .and(toi.obj.is()) // forces that the value is an object
   .and(
-    toi.object.keys({
+    toi.obj.keys({
       num: toi.required().and(toi.num.is()),
       str: toi.required().and(toi.str.is())
     })
