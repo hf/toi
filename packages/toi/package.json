@@ -3,7 +3,12 @@
   "version": "1.0.5",
   "description": "Toi is a validator for TypeScript.",
   "main": "build/index.js",
-  "files": ["build/**/*.{js,js.map,d.ts,d.ts.map}", "LICENSE", "README.md"],
+  "files": [
+    "build/**/*.{js,js.map,d.ts,d.ts.map}",
+    "index.ts",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.{js,jsx}",
@@ -13,7 +18,13 @@
     "type": "git",
     "url": "https://github.com/hf/toi"
   },
-  "keywords": ["typescript", "validator", "joi", "schema", "validation"],
+  "keywords": [
+    "typescript",
+    "validator",
+    "joi",
+    "schema",
+    "validation"
+  ],
   "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
   "license": "MIT",
   "dependencies": {},
@@ -30,10 +41,22 @@
     "typescript": "^3.0.0"
   },
   "nyc": {
-    "include": ["build/**/*.js"],
-    "exclude": ["build/**/*.spec.js", "build/**/*.spec.jsx"],
-    "extension": [".js", ".jsx"],
-    "reporter": ["text-summary", "html", "lcovonly"],
+    "include": [
+      "build/**/*.js"
+    ],
+    "exclude": [
+      "build/**/*.spec.js",
+      "build/**/*.spec.jsx"
+    ],
+    "extension": [
+      ".js",
+      ".jsx"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "lcovonly"
+    ],
     "sourceMap": true,
     "instrument": true
   }
