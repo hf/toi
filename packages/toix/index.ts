@@ -58,7 +58,7 @@ export namespace str {
     );
 
   /**
-   * Checks for a valid URL. Accepts an URL as string.
+   * Checks for a valid URL. Accepts an URL as string. Uses the 'URL()' constructor for validation.
    */
   export const urlAsString = <X extends string>() =>
     wrap(
@@ -69,11 +69,8 @@ export namespace str {
             new URL(value);
             return value;
           } catch (error) {
-            if (error instanceof TypeError) {
-              throw new ValidationError("Not a valid URL", value)
-            }
-
-            throw error;
+            // it will always be a type error
+            throw new ValidationError("Not a valid URL", value);
           }
         }
       )
