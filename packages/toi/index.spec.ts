@@ -183,6 +183,20 @@ describe("toi", () => {
         []
       ]
     });
+
+    assert(toi.any.values("a", "b", "c"), {
+      positive: ["a", "b", "c"],
+      negative: [
+        0,
+        NaN,
+        new String("a"),
+        new String("b"),
+        new String("c"),
+        false,
+        {},
+        []
+      ]
+    });
   });
 
   describe("str", () => {
