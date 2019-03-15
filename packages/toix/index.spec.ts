@@ -282,6 +282,60 @@ describe("toix", () => {
       });
     });
 
+    describe("urlAsString()", () => {
+      assert(toix.str.urlAsString(), {
+        positive: [
+          "http://www.google.com",
+          "https://www.google.com",
+          "http://google.com",
+          "http://www.google.com/imghp",
+          "http://g.co",
+          "ftp://google.com",
+          "http://кирилица.мкд",
+          "http://1337.net",
+          "http://foo.com/blah_(wikipedia)#cite-1",
+          "http://j.mp",
+          "http://.",
+          "http://0.0.0.0",
+          "h://test",
+          "ftps://foo.bar/",
+          "http:///a"
+        ],
+        negative: [
+          "www.google",
+          "www.google#.com",
+          "www.google-.co",
+          "www.-google.co",
+          "http://",
+          "http://??",
+          "///a",
+          ":// should fail",
+          "//"
+        ]
+      });
+    });
+
+    describe("startsWith()", () => {
+      assert(toix.str.startsWith("test"), {
+        positive: ["test-123"],
+        negative: ["does-not-start-test-123"]
+      });
+    });
+
+    describe("endsWith()", () => {
+      assert(toix.str.endsWith("test"), {
+        positive: ["123-test"],
+        negative: ["does-not-end-test-123"]
+      });
+    });
+
+    describe("contains()", () => {
+      assert(toix.str.contains("test"), {
+        positive: ["123-test-contains"],
+        negative: ["does-not-contain"]
+      });
+    });
+
     describe("lowercase()", () => {
       transform(toix.str.lowercase(), {
         positive: [["", ""], ["hello", "hello"], ["HELLO", "hello"]]

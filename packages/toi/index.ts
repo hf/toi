@@ -230,6 +230,11 @@ export namespace any {
         `value is not one of ${values.map(value => `${value}`).join(", ")}`
       )
     );
+
+  /**
+   * Alias for `only`. Check that the value is one of the provided values.
+   */
+  export const values = only;
 }
 
 /**

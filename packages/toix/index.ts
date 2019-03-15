@@ -57,6 +57,25 @@ export namespace str {
       )
     );
 
+  /**
+   * Checks for a valid URL. Accepts an URL as string. Uses the 'URL()' constructor for validation.
+   */
+  export const urlAsString = <X extends string>() =>
+    wrap(
+      "str.urlAsString",
+      transform<X, string>(
+        value => {
+          try {
+            new URL(value);
+            return value;
+          } catch (error) {
+            // it will always be a type error
+            throw new ValidationError("Not a valid URL", value);
+          }
+        }
+      )
+    );
+
 
   /**
    * Checks that the value is a GUID. By default it accepts any version of GUID and does not
@@ -103,6 +122,42 @@ export namespace str {
       allow<X, X>(
         value => !!value.match(/^[a-z0-9-]+(\.[a-z0-9-]+)+$/),
         "value is not a hostname"
+      )
+    );
+
+  /**
+   * Checks that the value begins with the characters of the specified string. Uses "String.startsWith()".
+   */
+  export const startsWith = <X extends string>(start: string) =>
+    wrap(
+      "str.startsWith",
+      allow<X, X>(
+        value => !!value.startsWith(start),
+        `value does not start with: ${start}`
+      )
+    );
+
+  /**
+   * Checks that the value ends with the characters of the specified string. Uses "String.endsWith()".
+   */
+  export const endsWith = <X extends string>(end: string) =>
+    wrap(
+      "str.endsWith",
+      allow<X, X>(
+        value => !!value.endsWith(end),
+        `value does not end with: ${end}`
+      )
+    );
+
+  /**
+   * Checks that the value contains the characters of the specified string in sequence. Uses "String.includes()".
+   */
+  export const contains = <X extends string>(part: string) =>
+    wrap(
+      "str.contains",
+      allow<X, X>(
+        value => !!value.includes(part),
+        `value does not contain: ${part}`
       )
     );
 
