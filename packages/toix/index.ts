@@ -126,6 +126,42 @@ export namespace str {
     );
 
   /**
+   * Checks that the value begins with the characters of the specified string. Uses "String.startsWith()".
+   */
+  export const startsWith = <X extends string>(start: string) =>
+    wrap(
+      "str.startsWith",
+      allow<X, X>(
+        value => !!value.startsWith(start),
+        `value does not start with: ${start}`
+      )
+    );
+
+  /**
+   * Checks that the value ends with the characters of the specified string. Uses "String.endsWith()".
+   */
+  export const endsWith = <X extends string>(end: string) =>
+    wrap(
+      "str.endsWith",
+      allow<X, X>(
+        value => !!value.endsWith(end),
+        `value does not end with: ${end}`
+      )
+    );
+
+  /**
+   * Checks that the value contains the characters of the specified string in sequence. Uses "String.includes()".
+   */
+  export const contains = <X extends string>(part: string) =>
+    wrap(
+      "str.contains",
+      allow<X, X>(
+        value => !!value.includes(part),
+        `value does not contain: ${part}`
+      )
+    );
+
+  /**
    * Lowercases a string.
    */
   export const lowercase = <X extends string>() =>

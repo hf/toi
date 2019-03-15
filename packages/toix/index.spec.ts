@@ -315,6 +315,27 @@ describe("toix", () => {
       });
     });
 
+    describe("startsWith()", () => {
+      assert(toix.str.startsWith("test"), {
+        positive: ["test-123"],
+        negative: ["does-not-start-test-123"]
+      });
+    });
+
+    describe("endsWith()", () => {
+      assert(toix.str.endsWith("test"), {
+        positive: ["123-test"],
+        negative: ["does-not-end-test-123"]
+      });
+    });
+
+    describe("contains()", () => {
+      assert(toix.str.contains("test"), {
+        positive: ["123-test-contains"],
+        negative: ["does-not-contain"]
+      });
+    });
+
     describe("lowercase()", () => {
       transform(toix.str.lowercase(), {
         positive: [["", ""], ["hello", "hello"], ["HELLO", "hello"]]
