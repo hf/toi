@@ -57,6 +57,28 @@ export namespace str {
       )
     );
 
+  /**
+   * Checks for a valid URL. Accepts an URL as string.
+   */
+  export const urlAsString = <X extends string>() =>
+    wrap(
+      "str.urlAsString",
+      transform<X, string>(
+        value => {
+          try {
+            new URL(value);
+            return value;
+          } catch (error) {
+            if (error instanceof TypeError) {
+              throw new ValidationError("Not a valid URL", value)
+            }
+
+            throw error;
+          }
+        }
+      )
+    );
+
 
   /**
    * Checks that the value is a GUID. By default it accepts any version of GUID and does not

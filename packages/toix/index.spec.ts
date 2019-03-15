@@ -282,6 +282,39 @@ describe("toix", () => {
       });
     });
 
+    describe("urlAsString()", () => {
+      assert(toix.str.urlAsString(), {
+        positive: [
+          "http://www.google.com",
+          "https://www.google.com",
+          "http://google.com",
+          "http://www.google.com/imghp",
+          "http://g.co",
+          "ftp://google.com",
+          "http://кирилица.мкд",
+          "http://1337.net",
+          "http://foo.com/blah_(wikipedia)#cite-1",
+          "http://j.mp",
+          "http://.",
+          "http://0.0.0.0",
+          "h://test",
+          "ftps://foo.bar/",
+          "http:///a"
+        ],
+        negative: [
+          "www.google",
+          "www.google#.com",
+          "www.google-.co",
+          "www.-google.co",
+          "http://",
+          "http://??",
+          "///a",
+          ":// should fail",
+          "//"
+        ]
+      });
+    });
+
     describe("lowercase()", () => {
       transform(toix.str.lowercase(), {
         positive: [["", ""], ["hello", "hello"], ["HELLO", "hello"]]
