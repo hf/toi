@@ -892,10 +892,10 @@ node-bin-setup@^1.0.0:
   resolved "https://registry.yarnpkg.com/node-bin-setup/-/node-bin-setup-1.0.6.tgz#4b5c9bb937ece702d7069b36ca78af4684677528"
   integrity sha512-uPIxXNis1CRbv1DwqAxkgBk5NFV3s7cMN/Gf556jSw6jBvV7ca4F9lRL/8cALcZecRibeqU+5dFYqFFmzv5a0Q==
 
-node@^10.0.0:
-  version "10.13.0"
-  resolved "https://registry.yarnpkg.com/node/-/node-10.13.0.tgz#0ea41f369fc50f6288c0da20151c1224bbf12368"
-  integrity sha512-IlfBQRq888Mp0nSMgYH6ONZLxD0ybKEOtD4WdiStebbQXg5EWBSs5RaaoYq4xBOW3g7TX8iqNz+gTHimC1fTJQ==
+node@>=10.0.0:
+  version "11.13.0"
+  resolved "https://registry.yarnpkg.com/node/-/node-11.13.0.tgz#a5bfd5d55749b7e7795d9da2e04a9f319e29e2ab"
+  integrity sha512-Ak7+1LVX2IYFetW8SO5tk/4hn/JzhirAkB3430KHEcGSVdruOs6KbvNBE+MXDa98aBSSS9WJ/6p10YoY3HiEBQ==
   dependencies:
     node-bin-setup "^1.0.0"
 
@@ -1110,10 +1110,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
-prettier@^1.14.2:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
-  integrity sha512-McHPg0n1pIke+A/4VcaS2en+pTNjy4xF+Uuq86u/5dyDO59/TtFZtQ708QIRkEZ3qwKz3GVkVa6mpxK/CpB8Rg==
+prettier@^1.17.0:
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.17.0.tgz#53b303676eed22cc14a9f0cec09b477b3026c008"
+  integrity sha512-sXe5lSt2WQlCbydGETgfm1YBShgOX4HxQkFPvbxkcwgDvGDeqVau8h+12+lmSVlP3rHPz0oavfddSZg/q+Szjw==
 
 proxyquire@^2.1.0:
   version "2.1.0"
