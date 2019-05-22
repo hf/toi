@@ -18,7 +18,14 @@
     "type": "git",
     "url": "https://github.com/hf/toi"
   },
-  "keywords": ["toi", "typescript", "validator", "joi", "schema", "validation"],
+  "keywords": [
+    "toi",
+    "typescript",
+    "validator",
+    "joi",
+    "schema",
+    "validation"
+  ],
   "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -40,10 +47,22 @@
     "typescript": "^3.0.0"
   },
   "nyc": {
-    "include": ["build/**/*.js"],
-    "exclude": ["build/**/*.spec.js", "build/**/*.spec.jsx"],
-    "extension": [".js", ".jsx"],
-    "reporter": ["text-summary", "html", "lcovonly"],
+    "include": [
+      "build/**/*.js"
+    ],
+    "exclude": [
+      "build/**/*.spec.js",
+      "build/**/*.spec.jsx"
+    ],
+    "extension": [
+      ".js",
+      ".jsx"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "lcovonly"
+    ],
     "sourceMap": true,
     "instrument": true
   }
