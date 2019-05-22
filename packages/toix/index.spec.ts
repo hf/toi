@@ -248,7 +248,7 @@ describe("toix", () => {
           "https://www.google.com",
           "http://google.com",
           "http://www.google.com/imghp",
-          "http://g.co",
+          "http://g.co"
         ],
         negative: [
           "www.google",
@@ -259,26 +259,17 @@ describe("toix", () => {
       });
 
       assert(toix.str.url({ protocol: "http:" }), {
-        positive: [
-          "http://google.com",
-          "http://yahoo.com"
-        ],
+        positive: ["http://google.com", "http://yahoo.com"],
         negative: [
           "https://google.com",
-          "https://yahoo.com", 
+          "https://yahoo.com",
           "ftp://google.com"
         ]
       });
 
-      assert(toix.str.url({ port: '443' }), {
-        positive: [
-          "http://google.com:443",
-          "http://yahoo.com:443"
-        ],
-        negative: [
-          "http://google.com",
-          "http://yahoo.com"
-        ]
+      assert(toix.str.url({ port: "443" }), {
+        positive: ["http://google.com:443", "http://yahoo.com:443"],
+        negative: ["http://google.com", "http://yahoo.com"]
       });
     });
 
@@ -358,6 +349,61 @@ describe("toix", () => {
       assert(toix.str.phoneNumber(), {
         positive: ["+8006927753", "+3891234567", "8006927753"],
         negative: ["+012", "+1", "+", "1", "+1234567891234567"]
+      });
+    });
+  });
+
+  describe("bool", () => {
+    describe("parse() yes/no", () => {
+      transform(toix.bool.parse(), {
+        positive: [
+          ["y", true],
+          ["yes", true],
+          ["Yes", true],
+          ["YES", true],
+          ["n", false],
+          ["no", false],
+          ["No", false],
+          ["NO", false]
+        ],
+        negative: ["", "yesterday", "nobody"]
+      });
+    });
+
+    describe("parse() true/false", () => {
+      transform(toix.bool.parse(), {
+        positive: [
+          ["t", true],
+          ["true", true],
+          ["True", true],
+          ["TRUE", true],
+          ["f", false],
+          ["false", false],
+          ["False", false],
+          ["FALSE", false]
+        ],
+        negative: ["", "trueness", "falsehood"]
+      });
+    });
+
+    describe("parse() on/off", () => {
+      transform(toix.bool.parse(), {
+        positive: [
+          ["on", true],
+          ["On", true],
+          ["ON", true],
+          ["off", false],
+          ["Off", false],
+          ["OFF", false]
+        ],
+        negative: ["", "ontology", "offsite"]
+      });
+    });
+
+    describe("parse() 1/0", () => {
+      transform(toix.bool.parse(), {
+        positive: [["1", true], ["0", false]],
+        negative: ["", "10", "01", "2"]
       });
     });
   });

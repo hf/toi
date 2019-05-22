@@ -29,32 +29,39 @@ export namespace str {
    * Checks for a valid URL. Accepts an URL, and optional
    * parameters like protocol and port.
    */
-  export const url = <X extends string, R extends string, O extends string>(options: { protocol?: R, port?: O  } = {}) =>
+  export const url = <X extends string, R extends string, O extends string>(
+    options: { protocol?: R; port?: O } = {}
+  ) =>
     wrap(
       "str.url",
-      transform<X, URL & { protocol: R, port: O }>(
-        value => {
-          try {
-            const url = new URL(value);
+      transform<X, URL & { protocol: R; port: O }>(value => {
+        try {
+          const url = new URL(value);
 
-            if (options && options.port && options.port !== url.port) {
-              throw new ValidationError(`Invalid port: ${options.port}`, value);
-            }
-
-            if (options && options.protocol && options.protocol !== url.protocol) {
-              throw new ValidationError(`Invalid protocol: ${options.protocol}`, value)
-            }
-
-            return url as URL & { protocol: R, port: O };
-          } catch (error) {
-            if (error instanceof TypeError) {
-              throw new ValidationError("Not a valid URL", value)
-            }
-
-            throw error;
+          if (options && options.port && options.port !== url.port) {
+            throw new ValidationError(`Invalid port: ${options.port}`, value);
           }
+
+          if (
+            options &&
+            options.protocol &&
+            options.protocol !== url.protocol
+          ) {
+            throw new ValidationError(
+              `Invalid protocol: ${options.protocol}`,
+              value
+            );
+          }
+
+          return url as URL & { protocol: R; port: O };
+        } catch (error) {
+          if (error instanceof TypeError) {
+            throw new ValidationError("Not a valid URL", value);
+          }
+
+          throw error;
         }
-      )
+      })
     );
 
   /**
@@ -63,19 +70,16 @@ export namespace str {
   export const urlAsString = <X extends string>() =>
     wrap(
       "str.urlAsString",
-      transform<X, string>(
-        value => {
-          try {
-            new URL(value);
-            return value;
-          } catch (error) {
-            // it will always be a type error
-            throw new ValidationError("Not a valid URL", value);
-          }
+      transform<X, string>(value => {
+        try {
+          new URL(value);
+          return value;
+        } catch (error) {
+          // it will always be a type error
+          throw new ValidationError("Not a valid URL", value);
         }
-      )
+      })
     );
-
 
   /**
    * Checks that the value is a GUID. By default it accepts any version of GUID and does not
@@ -192,5 +196,39 @@ export namespace str {
           !!value.match(/^\+?[1-9]([0-9]{3,14}|[0-9]{2,14}|[0-9]{1,14})$/),
         "value does not match E.164 numbering plan"
       )
+    );
+}
+
+/**
+ * Extra validators for boolean values.
+ */
+export namespace bool {
+  /**
+   * Parses a string value into a boolean via the following rules:
+   *
+   * true: Y, YES, T, TRUE, 1 (case insensitive)
+   * false: N, NO, F, FALSE, 0 (case insensitive)
+   */
+  export const parse = <X extends string>() =>
+    wrap(
+      "bool.parse",
+      transform<X, boolean | null>(value => {
+        const match = value.match(
+          /^((YES|TRUE|ON|Y|T|1)|(NO|FALSE|OFF|N|F|0))$/i
+        );
+
+        if (!match) {
+          throw new ValidationError(
+            "value does not match Y, N, Yes, No, T, F, True, False, On, Off, 1, 0 (case insensitive)",
+            value
+          );
+        }
+
+        if (match[2]) {
+          return true;
+        }
+
+        return false;
+      })
     );
 }
