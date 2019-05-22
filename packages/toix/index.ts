@@ -213,10 +213,6 @@ export namespace bool {
     wrap(
       "bool.parse",
       transform<X, boolean | null>(value => {
-        if (undefined === value || null === value) {
-          return value;
-        }
-
         const match = value.match(
           /^((YES|TRUE|ON|Y|T|1)|(NO|FALSE|OFF|N|F|0))$/i
         );
