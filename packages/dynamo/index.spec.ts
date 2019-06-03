@@ -58,38 +58,6 @@ function equality(a: any, b: any): boolean {
   return a === b;
 }
 
-/*function assert(
-  validator: toi.Validator<any, any>,
-  options: {
-    positive?: any[];
-    negative?: any[];
-  },
-  lenient = false
-) {
-  if (!lenient) {
-    it(`should allow null`, () => validator(null));
-    it(`should allow undefined`, () => validator(undefined));
-  }
-
-  (options.positive || []).forEach(value => {
-    it(`should allow ${inspect(value)}`, () => validator(value));
-  });
-
-  (options.negative || []).forEach(value => {
-    it(`should not allow ${inspect(value)}`, () => {
-      try {
-        validator(value);
-        throw new Error(`Allowed!`);
-      } catch (error) {
-        if (error instanceof toi.ValidationError) {
-          return;
-        }
-        throw error;
-      }
-    });
-  });
-}*/
-
 function transform<I, O>(
   validator: toi.Validator<I, O>,
   options: {
@@ -144,9 +112,29 @@ function transform<I, O>(
 }
 
 describe("dynamo", () => {
-  describe("nullable", () => {
+  describe("nullable()", () => {
     transform(dynamo.nullable(), {
       positive: [[{}, {}], [1, 1], ["", ""], [{ NULL: false }, { NULL: false }]]
+    });
+  });
+
+  describe("isnull()", () => {
+    transform(dynamo.isnull(), {
+      positive: [[{ NULL: true }, null]],
+      negative: [
+        {},
+        false,
+        { NULL: false },
+        { N: "1" },
+        { NULL: 1 },
+        { S: "1" },
+        { B: "1" },
+        { SS: ["1"] },
+        { BS: ["1"] },
+        { NS: ["1"] },
+        { M: {} },
+        { L: [] }
+      ]
     });
   });
 
