@@ -484,6 +484,22 @@ describe("toi", () => {
       });
     });
 
+    describe("keys({ a: toi.num.is(), b: toi.num.is() }, { missing: { a: true } })", () => {
+      assert(
+        toi.obj.keys(
+          {
+            a: toi.num.is(),
+            b: toi.num.is()
+          },
+          { missing: ["a"] }
+        ),
+        {
+          positive: [{ a: 0, b: 0 }, { b: 0 }],
+          negative: [{ a: 0 }, {}]
+        }
+      );
+    });
+
     describe("xor(['a', 'b'])", () => {
       assert(toi.obj.xor(["a", "b"]), {
         positive: [{ a: 0, c: 1 }, { b: 0, c: 1 }],

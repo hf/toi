@@ -696,11 +696,21 @@ export namespace obj {
    * issues.
    *
    * @param structure the definition structure of the object
+   * @param options the validation options, like optional (missing) fields
    */
   export const keys = <X extends object, Y>(
-    structure: { [K in keyof Y]: Validator<any, Y[K]> }
-  ) =>
-    wrap<X, Y>("obj.keys", value => {
+    structure: { [K in keyof Y]: Validator<any, Y[K]> },
+    options?: { missing?: (keyof Y)[] }
+  ) => {
+    const missing: { [key in keyof Y]?: true } = {};
+
+    if (options && options.missing && options.missing.length > 0) {
+      for (let i = 0; i < options.missing.length; i += 1) {
+        missing[options.missing[i]] = true;
+      }
+    }
+
+    return wrap<X, Y>("obj.keys", value => {
       if (null === value || undefined === value) {
         return value;
       }
@@ -712,14 +722,15 @@ export namespace obj {
 
       const output: any = {};
 
-      const valueKeys = Object.keys(value);
-
       for (let key in structure) {
         try {
-          if (valueKeys.indexOf(key) < 0) {
-            throw new ValidationError("value is missing", (value as any)[key]);
+          if (!Object.getOwnPropertyDescriptor(value, key)) {
+            if (!missing[key]) {
+              throw new ValidationError(`key ${key} in value is missing`, key);
+            }
+          } else {
+            output[key] = (structure as any)[key]((value as any)[key]);
           }
-          output[key] = (structure as any)[key]((value as any)[key]);
         } catch (error) {
           isError(error, ValidationError, () => {
             if (!reasons) {
@@ -741,6 +752,7 @@ export namespace obj {
 
       return output;
     });
+  };
 
   /**
    * Transform an object by adding default values to the obeject. Always creates a copy
