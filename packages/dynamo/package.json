@@ -1,7 +1,7 @@
 {
-  "name": "@toi/toix",
+  "name": "@toi/dynamo",
   "version": "1.0.11",
-  "description": "Extra validators for Toi.",
+  "description": "Toi's Dynamo is a validator and transformer of DynamoDB objects for TypeScript.",
   "main": "build/index.js",
   "files": [
     "build/**/*.{js,js.map,d.ts,d.ts.map}",
@@ -19,26 +19,25 @@
     "url": "https://github.com/hf/toi"
   },
   "keywords": [
-    "toi",
     "typescript",
     "validator",
     "joi",
     "schema",
-    "validation"
+    "validation",
+    "dynamodb",
+    "aws",
+    "dax",
+    "serverless"
   ],
   "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@toi/toi": "^1.0.0",
-    "isemail": "^3.2.0",
-    "node": ">=10.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/mocha": "^5.2.5",
+    "@types/node": "^10.0.0",
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
-    "node": ">=10.0.0",
     "nyc": "^13.0.1",
     "prettier": "^1.17.1",
     "proxyquire": "^2.1.0",

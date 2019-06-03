@@ -95,6 +95,11 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.5.tgz#8a4accfc403c124a0bafe8a9fc61a05ec1032073"
   integrity sha512-lAVp+Kj54ui/vLUFxsJTMtWvZraZxum3w3Nwkble2dNuV5VnPA+Mi2oGX9XYJAaIvZi3tn3cbjS/qcJXRb6Bww==
 
+"@types/node@^10.0.0":
+  version "10.14.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.8.tgz#fe444203ecef1162348cd6deb76c62477b2cc6e9"
+  integrity sha512-I4+DbJEhLEg4/vIy/2gkWDvXBOOtPKV9EnLhYjMoqxcRW+TTZtUftkHktz/a8suoD5mUL7m6ReLrkPvSsCQQmw==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -893,9 +898,9 @@ node-bin-setup@^1.0.0:
   integrity sha512-uPIxXNis1CRbv1DwqAxkgBk5NFV3s7cMN/Gf556jSw6jBvV7ca4F9lRL/8cALcZecRibeqU+5dFYqFFmzv5a0Q==
 
 node@>=10.0.0:
-  version "12.3.0"
-  resolved "https://registry.yarnpkg.com/node/-/node-12.3.0.tgz#1606f6a41f0b222766314d1463dad00c8e5b25e0"
-  integrity sha512-jI956VoJvhTYKkZQcm/nvt8Mu+Klw6FeASloUfQJNGQA0RrA1/G0sYnkp+ZcQVpprCq0rNbvgmTKKpZLBLsJYg==
+  version "12.3.1"
+  resolved "https://registry.yarnpkg.com/node/-/node-12.3.1.tgz#286e084d98f8f5b2e4cae5e7e36ed290809f8c0c"
+  integrity sha512-v5jzaCc3aQ9RLa4f6Fj4RzvyLzJGyx6OYtuX1o8R/RaouItwBjhrI298hUrGo2A4AQoL23buj0HCRrdw4YvjLg==
   dependencies:
     node-bin-setup "^1.0.0"
 
@@ -1110,10 +1115,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
-prettier@^1.14.2:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
-  integrity sha512-McHPg0n1pIke+A/4VcaS2en+pTNjy4xF+Uuq86u/5dyDO59/TtFZtQ708QIRkEZ3qwKz3GVkVa6mpxK/CpB8Rg==
+prettier@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.17.1.tgz#ed64b4e93e370cb8a25b9ef7fef3e4fd1c0995db"
+  integrity sha512-TzGRNvuUSmPgwivDqkZ9tM/qTGW9hqDKWOE9YHiyQdixlKbv7kvEqsmDPrcHJTKwthU774TQwZXVtaQ/mMsvjg==
 
 proxyquire@^2.1.0:
   version "2.1.0"

@@ -10,6 +10,9 @@ TOI_VERSION=$?
 bash $DIR/package-version.sh @toi/toix packages/toix
 TOIX_VERSION=$?
 
+bash $DIR/package-version.sh @toi/dynamo packages/dynamo
+DYNAMO_VERSION=$?
+
 if [ "0" -eq "$TOI_VERSION" ]
 then
   cd packages/toi
@@ -42,3 +45,18 @@ else
   echo "Package @toi/toix is already published."
 fi
 
+if [ "0" -eq "$DYNAMO_VERSION" ]
+then
+  cd packages/dynamo
+  npm publish --access public
+  EXCODE=$?
+  cd ../..
+
+  if [ "$EXCODE" != "0" ]
+  then
+    echo "Unable to publish @toi/dynamo"
+    exit $EXCODE
+  fi
+else
+  echo "Package @toi/dynamo is already published."
+fi
