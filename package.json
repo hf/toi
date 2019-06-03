@@ -1,9 +1,15 @@
 {
   "private": true,
-  "workspaces": ["packages/toi", "packages/toix", "packages/dynamo"],
+  "workspaces": [
+    "packages/toi",
+    "packages/toix",
+    "packages/dynamo"
+  ],
   "scripts": {
     "build": "wsrun build",
-    "prettier": ["prettier -l **/*"],
+    "prettier": [
+      "prettier -l **/*.{ts,json,md}"
+    ],
     "coverage": "wsrun coverage",
     "test": "wsrun test --serial",
     "publish": "wsrun publish"

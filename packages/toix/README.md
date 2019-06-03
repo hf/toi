@@ -14,10 +14,12 @@ of a validation schema.
 See the documentation on GitHub: [github.com/hf/toi](https://github.com/hf/toi).
 
 ## Contributors
+
 - Stojan Dimitrovski
 - Hristijan Lubeski
 
 ## License
+
 Copyright &copy; 2018 Stojan Dimitrovski et al., some rights reserved.
 
 Licensed under the MIT license. You can get a copy of it in `LICENSE`.
