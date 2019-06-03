@@ -1,6 +1,6 @@
 {
   "private": true,
-  "workspaces": ["packages/toi", "packages/toix"],
+  "workspaces": ["packages/toi", "packages/toix", "packages/dynamo"],
   "scripts": {
     "build": "wsrun build",
     "prettier": ["prettier -l **/*"],

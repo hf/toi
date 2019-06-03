@@ -8,10 +8,9 @@
 const fs = require("fs");
 
 function version(value) {
-  return value
-    .split(".")
-    .map(v => parseInt(v))
-    .reduce((a, i) => a * 1000 + i, 0);
+  return value.split(".")
+      .map(v = > parseInt(v))
+      .reduce((a, i) = > a * 1000 + i, 0);
 }
 
 const PATH = process.argv[2];

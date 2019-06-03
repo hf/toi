@@ -1,0 +1,56 @@
+{
+  "name": "@toi/dynamo",
+  "version": "1.0.10",
+  "description": "Toi's Dynamo is a validator and transformer of DynamoDB objects for TypeScript.",
+  "main": "build/index.js",
+  "files": [
+    "build/**/*.{js,js.map,d.ts,d.ts.map}",
+    "index.ts",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.{js,jsx}",
+    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hf/toi"
+  },
+  "keywords": [
+    "typescript",
+    "validator",
+    "joi",
+    "schema",
+    "validation",
+    "dynamodb",
+    "aws",
+    "dax",
+    "serverless"
+  ],
+  "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.0.0",
+    "chai": "^4.1.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
+    "prettier": "^1.14.2",
+    "proxyquire": "^2.1.0",
+    "source-map-support": "^0.5.9",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.0"
+  },
+  "nyc": {
+    "include": ["build/**/*.js"],
+    "exclude": ["build/**/*.spec.js", "build/**/*.spec.jsx"],
+    "extension": [".js", ".jsx"],
+    "reporter": ["text-summary", "html", "lcovonly"],
+    "sourceMap": true,
+    "instrument": true
+  }
+}
