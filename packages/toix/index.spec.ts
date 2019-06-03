@@ -407,4 +407,19 @@ describe("toix", () => {
       });
     });
   });
+
+  describe("json", () => {
+    describe("parse()", () => {
+      transform(toix.json.parse(), {
+        positive: [[JSON.stringify({}), {}]],
+        negative: ["", "{", "["]
+      });
+    });
+
+    describe("stringify()", () => {
+      transform(toix.json.stringify(), {
+        positive: [[{}, "{}"]]
+      });
+    });
+  });
 });

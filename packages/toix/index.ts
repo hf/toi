@@ -232,3 +232,33 @@ export namespace bool {
       })
     );
 }
+
+/**
+ * JSON parsing, stringifying.
+ */
+export namespace json {
+  /**
+   * Parse a string into an unknown JS value.
+   */
+  export const parse = <X extends string>(
+    parser: (text: X) => unknown = JSON.parse
+  ) =>
+    wrap(
+      "json.parse",
+      transform<X, unknown>(value => {
+        try {
+          return parser(value);
+        } catch (error) {
+          throw new ValidationError("invalid json", value, error);
+        }
+      })
+    );
+
+  /**
+   * Stringify some unknown JS value to a JSON string.
+   */
+  export const stringify = <X>(
+    stringifier: (value: X) => string = JSON.stringify
+  ) =>
+    wrap("json.stringify", transform<X, string>(value => stringifier(value)));
+}
