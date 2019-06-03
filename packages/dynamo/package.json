@@ -1,6 +1,6 @@
 {
   "name": "@toi/dynamo",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Toi's Dynamo is a validator and transformer of DynamoDB objects for TypeScript.",
   "main": "build/index.js",
   "files": [
