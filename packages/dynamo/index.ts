@@ -1,15 +1,3 @@
-import * as toi from "@toi/toi";
-
-/**
- * DynamoDB stores numbers as strings in order to increase number compatibility
- * with other languages. (JavaScript numebrs are floating point, and therefore
- * at most 53 bits long as integers.)
- *
- * This is a branded type that tells Toi's Dynamo that although it's a string,
- * it really means a number.
- */
-export type DynamoNumber = string & { __brand_represents: number };
-
 /**
  * Contains transformers for DynamoDB values.
  *
@@ -31,6 +19,18 @@ export type DynamoNumber = string & { __brand_represents: number };
  * validators on top to create rich objects!)
  */
 
+import * as toi from "@toi/toi";
+
+/**
+ * DynamoDB stores numbers as strings in order to increase number compatibility
+ * with other languages. (JavaScript numebrs are floating point, and therefore
+ * at most 53 bits long as integers.)
+ *
+ * This is a branded type that tells Toi's Dynamo that although it's a string,
+ * it really means a number.
+ */
+export type DynamoNumber = string & { __brand_represents: number };
+
 /**
  * Checks for DynamoDB's dreaded { NULL: true } object and returns null.
  */
@@ -50,7 +50,6 @@ export const nullable = <X>() =>
             if (
               descriptor &&
               descriptor.enumerable &&
-              descriptor.configurable &&
               !descriptor.set &&
               !descriptor.get &&
               true === descriptor.value
@@ -130,6 +129,18 @@ export namespace num {
       toi.transform<X, DynamoNumber>(value => value.N as DynamoNumber)
     );
 
+  export const format = () =>
+    toi.str.regex(
+      /^(0|0.0|-?0[.][0-9]*([1-9]$)|-?[1-9][0-9]*([.][0-9]*([1-9]$))?)$/
+      // A BBB CCDDDDDDDDDDDDDDDDDD EEEEEEEEEEEEE FFFFFFFFF GGGGGG  G
+      // A - "0"
+      // B - "0.0"
+      // C - possible negative 0.xxx
+      // D - 0.xxxx where the last one is not a 0
+      // E - (possibly negative) integer that starts with 1
+      // F - possible fractional part that contains 0s but can't end on 0 and must be at least 1 digit
+    );
+
   /**
    * Extract either a DynamoDB null or number value. However, the value will be encoded as
    * DynamoNumber, which is a branded string.
@@ -146,9 +157,7 @@ export namespace num {
           N: toi
             .required()
             .and(toi.str.is())
-            .and(
-              toi.str.regex(/^(0|0[.]0|-?[1-9][0-9]*([.][0-9]*([1-9]|$))?)$/)
-            )
+            .and(format())
         })
       )
       .and(pick());
@@ -181,17 +190,7 @@ export namespace numset {
             .and(toi.array.min(1))
             .and(
               toi.array.items(
-                toi
-                  .required()
-                  .and(
-                    toi.str
-                      .is()
-                      .and(
-                        toi.str.regex(
-                          /^(0|0[.]0|-?[1-9][0-9]*([.][0-9]*([1-9]|$))?)$/
-                        )
-                      )
-                  )
+                toi.required().and(toi.str.is().and(num.format()))
               )
             )
         })
