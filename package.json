@@ -15,7 +15,7 @@
     "publish": "wsrun publish"
   },
   "devDependencies": {
-    "wsrun": "^2.2.1"
+    "wsrun": "^3.6.6"
   },
   "dependencies": {
     "travis": "^0.1.1"
