@@ -273,8 +273,16 @@ describe("toix", () => {
       });
     });
 
-    describe("urlAsString()", () => {
-      assert(toix.str.urlAsString(), {
+    describe("DEPRECATED urlAsString()", () => {
+      it("should redirect to isurl()", () => {
+        if (toix.str.urlAsString !== toix.str.isurl) {
+          throw new Error("toix.str.urlAsString is not toix.str.isurl!");
+        }
+      });
+    });
+
+    describe("isurl()", () => {
+      assert(toix.str.isurl(), {
         positive: [
           "http://www.google.com",
           "https://www.google.com",
@@ -345,10 +353,218 @@ describe("toix", () => {
       });
     });
 
+    describe("split('.')", () => {
+      transform(toix.str.split("."), {
+        positive: [["hello.world", ["hello", "world"]]],
+        negative: []
+      });
+    });
+
+    describe("split(/[.]/)", () => {
+      transform(toix.str.split(/[.]/), {
+        positive: [["hello.world", ["hello", "world"]]],
+        negative: []
+      });
+    });
+
+    describe("replace('.', ':')", () => {
+      transform(toix.str.replace(".", ":"), {
+        positive: [[".", ":"]],
+        negative: []
+      });
+    });
+
+    describe("replace(/[.]/, ':')", () => {
+      transform(toix.str.replace(/[.]/, ":"), {
+        positive: [[".", ":"]],
+        negative: []
+      });
+    });
+
+    describe("replace(/[.]/, () => ':')", () => {
+      transform(toix.str.replace(/[.]/, () => ":"), {
+        positive: [[".", ":"]],
+        negative: []
+      });
+    });
+
     describe("phoneNumber()", () => {
       assert(toix.str.phoneNumber(), {
         positive: ["+8006927753", "+3891234567", "8006927753"],
         negative: ["+012", "+1", "+", "1", "+1234567891234567"]
+      });
+    });
+
+    describe("isbase64() RFC4648 not-url", () => {
+      toix.str.isbase64(null as any);
+      toix.str.isbase64("rfc4648");
+      toix.str.isbase64("default");
+
+      try {
+        toix.str.isbase64("rfc2045" as any);
+        throw new Error("Allowed to specify RFC2045 but not implemented!");
+      } catch (error) {}
+
+      assert(toix.str.isbase64(), {
+        positive: [
+          "",
+          "XX==",
+          "XXX=",
+          "XXXX",
+          "11112222",
+          "111122==",
+          "1111222=",
+          "111122223333",
+          "1111222233==",
+          "11112222333="
+        ],
+        negative: [
+          "X",
+          "XX",
+          "XXX",
+          "#",
+          "____",
+          "----",
+          "==",
+          "=",
+          "====",
+          "X===",
+          "X==",
+          "X="
+        ]
+      });
+    });
+
+    describe("isbase64('rfc4648-url')", () => {
+      toix.str.isbase64("url");
+      toix.str.isbase64("rfc4648-url");
+
+      assert(toix.str.isbase64("rfc4648-url"), {
+        positive: [
+          "",
+          "XX",
+          "XXX",
+          "1111",
+          "11112222",
+          "1111222",
+          "111122",
+          "1111222=",
+          "111122==",
+          "____--=="
+        ],
+        negative: [
+          "X",
+          "#",
+          "////",
+          "++++",
+          "==",
+          "=",
+          "====",
+          "X===",
+          "X==",
+          "X="
+        ]
+      });
+    });
+
+    describe("isbase32() RFC4648 not-url", () => {
+      toix.str.isbase32(null as any);
+      toix.str.isbase32("default");
+      toix.str.isbase32("rfc4648");
+
+      try {
+        toix.str.isbase32("z-base" as any);
+        throw new Error(
+          "Allowed the use of z-base-32 encoding but it is not implemented."
+        );
+      } catch (error) {}
+
+      assert(toix.str.isbase32(), {
+        positive: [
+          "",
+          "XXXXYYYY", // 40 bits
+          "XX======", // 8 bits
+          "XXXX====", // 16 bits
+          "XXXXY===", // 24 bits
+          "XXXXYYY=", // 32 bits
+          "22227777XXXXYYYY", // 40 + 40 bits
+          "22227777XX======", // 40 + 8 bits
+          "22227777XXXX====", // 40 + 16 bits
+          "22227777XXXXY===", // 40 + 24 bits
+          "22227777XXXXYYY=" //  40 + 32 bits
+        ],
+        negative: [
+          "00000000",
+          "11111111",
+          "88888888",
+          "99999999",
+          "2222333300000000",
+          "2222333311111111",
+          "2222333388888888",
+          "2222333399999999",
+          "========",
+          "======",
+          "====",
+          "===",
+          "=",
+          "XXXXYYYYX=======",
+          "XXXXYYYYXXX=====",
+          "XXXXYYYYXXXXXX==",
+          "aaaaaaaaaaaaaaa=" //  40 + 32 bits
+        ]
+      });
+
+      describe("isbase32('rfc4648-url')", () => {
+        toix.str.isbase32("url");
+
+        assert(toix.str.isbase32("rfc4648-url"), {
+          positive: [
+            "",
+            "XXXXYYYY", // 40 bits
+            "XX======", // 8 bits
+            "XXXX====", // 16 bits
+            "XXXXY===", // 24 bits
+            "XXXXYYY=", // 32 bits
+            "22227777XXXXYYYY", // 40 + 40 bits
+            "22227777XX======", // 40 + 8 bits
+            "22227777XXXX====", // 40 + 16 bits
+            "22227777XXXXY===", // 40 + 24 bits
+            "22227777XXXXYYY=", //  40 + 32 bits
+            "XXXXYYYY", // 40 bits
+            "XX", // 8 bits
+            "XXXX", // 16 bits
+            "XXXXY", // 24 bits
+            "XXXXYYY", // 32 bits
+            "22227777XXXXYYYY", // 40 + 40 bits
+            "22227777XX", // 40 + 8 bits
+            "22227777XXXX", // 40 + 16 bits
+            "22227777XXXXY", // 40 + 24 bits
+            "22227777XXXXYYY" //  40 + 32 bits
+          ],
+          negative: [
+            "00000000",
+            "11111111",
+            "88888888",
+            "99999999",
+            "2222333300000000",
+            "2222333311111111",
+            "2222333388888888",
+            "2222333399999999",
+            "========",
+            "======",
+            "====",
+            "===",
+            "=",
+            "XXXXYYYYX=======",
+            "XXXXYYYYXXX=====",
+            "XXXXYYYYXXXXXX==",
+            "aaaaaaaaaaaaaaa=", //  40 + 32 bits
+            "XXXXYYYYX",
+            "XXXXYYYYXXX",
+            "XXXXYYYYXXXXXX",
+            "aaaaaaaaaaaaaaa" //  40 + 32 bits
+          ]
+        });
       });
     });
   });
@@ -404,6 +620,21 @@ describe("toix", () => {
       transform(toix.bool.parse(), {
         positive: [["1", true], ["0", false]],
         negative: ["", "10", "01", "2"]
+      });
+    });
+  });
+
+  describe("json", () => {
+    describe("parse()", () => {
+      transform(toix.json.parse(), {
+        positive: [[JSON.stringify({}), {}]],
+        negative: ["", "{", "["]
+      });
+    });
+
+    describe("stringify()", () => {
+      transform(toix.json.stringify(), {
+        positive: [[{}, "{}"]]
       });
     });
   });

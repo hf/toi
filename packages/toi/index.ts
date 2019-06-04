@@ -600,6 +600,8 @@ export namespace array {
 export namespace obj {
   /**
    * Checks that the value is a JavaScript object excluding `null`.
+   * Usually when validating HTTP body input you want to use toi.obj.isplain() as that
+   * can mitigate some prototype-pollution attacks.
    */
   export const is = <X>() =>
     wrap(
@@ -607,6 +609,25 @@ export namespace obj {
       allow<X, object>(
         value => null !== value && "object" === typeof value,
         `value is not an object type`
+      )
+    );
+
+  /**
+   * Checks that the object is a plain JavaScript object, i.e. an object whose
+   * prototype is Object.prototype and no attempt has been made to insert a
+   * __proto__ property as a way to change the object's prototype. `null` is not regarded
+   * as an object, though it is.
+   */
+  export const isplain = <X>() =>
+    wrap(
+      "obj.isplain",
+      allow<X, object>(
+        value =>
+          null !== value &&
+          "object" === typeof value &&
+          !Object.getOwnPropertyDescriptor(value, "__proto__") &&
+          Object.prototype === Object.getPrototypeOf(value),
+        "value is not an object or its prototype is not Object.prototype"
       )
     );
 
@@ -696,11 +717,21 @@ export namespace obj {
    * issues.
    *
    * @param structure the definition structure of the object
+   * @param options the validation options, like optional (missing) fields
    */
   export const keys = <X extends object, Y>(
-    structure: { [K in keyof Y]: Validator<any, Y[K]> }
-  ) =>
-    wrap<X, Y>("obj.keys", value => {
+    structure: { [K in keyof Y]: Validator<any, Y[K]> },
+    options?: { missing?: (keyof Y)[] }
+  ) => {
+    const missing: { [key in keyof Y]?: true } = {};
+
+    if (options && options.missing && options.missing.length > 0) {
+      for (let i = 0; i < options.missing.length; i += 1) {
+        missing[options.missing[i]] = true;
+      }
+    }
+
+    return wrap<X, Y>("obj.keys", value => {
       if (null === value || undefined === value) {
         return value;
       }
@@ -712,14 +743,20 @@ export namespace obj {
 
       const output: any = {};
 
-      const valueKeys = Object.keys(value);
-
       for (let key in structure) {
         try {
-          if (valueKeys.indexOf(key) < 0) {
-            throw new ValidationError("value is missing", (value as any)[key]);
+          if (!Object.getOwnPropertyDescriptor(value, key)) {
+            if (!missing[key]) {
+              throw new ValidationError(`key ${key} in value is missing`, key);
+            } else {
+              // still run the validator even if the value is missing, so that if
+              // someone has said that the key can be missing but they've put a required validator
+              // the validation will fail
+              output[key] = (structure as any)[key]((value as any)[key]);
+            }
+          } else {
+            output[key] = (structure as any)[key]((value as any)[key]);
           }
-          output[key] = (structure as any)[key]((value as any)[key]);
         } catch (error) {
           isError(error, ValidationError, () => {
             if (!reasons) {
@@ -741,6 +778,7 @@ export namespace obj {
 
       return output;
     });
+  };
 
   /**
    * Transform an object by adding default values to the obeject. Always creates a copy

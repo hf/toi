@@ -284,7 +284,10 @@ describe("dynamo", () => {
       transform(dynamo.binset.is(), {
         positive: [
           [{ BS: [""] }, [Buffer.alloc(0)]],
-          [{ BS: ["a"] }, [Buffer.from("a", "base64")]]
+          [
+            { BS: [Buffer.from("Hello, world!", "utf8").toString("base64")] },
+            [Buffer.from("Hello, world!", "utf8")]
+          ]
         ],
         negative: [
           { S: "x" },

@@ -20,6 +20,7 @@
  */
 
 import * as toi from "@toi/toi";
+import * as toix from "@toi/toix";
 
 /**
  * DynamoDB stores numbers as strings in order to increase number compatibility
@@ -257,7 +258,10 @@ export namespace bin {
       .and(toi.obj.is())
       .and(
         toi.obj.keys({
-          B: toi.required().and(toi.str.is())
+          B: toi
+            .required()
+            .and(toi.str.is())
+            .and(toix.str.isbase64("rfc4648"))
         })
       )
       .and(pick());
@@ -290,7 +294,14 @@ export namespace binset {
             .required()
             .and(toi.array.is())
             .and(toi.array.min(1))
-            .and(toi.array.items(toi.required().and(toi.str.is())))
+            .and(
+              toi.array.items(
+                toi
+                  .required()
+                  .and(toi.str.is())
+                  .and(toix.str.isbase64("rfc4648"))
+              )
+            )
         })
       )
       .and(pick());

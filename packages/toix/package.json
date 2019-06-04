@@ -1,6 +1,6 @@
 {
   "name": "@toi/toix",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Extra validators for Toi.",
   "main": "build/index.js",
   "files": [
