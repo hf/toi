@@ -229,6 +229,13 @@ describe("dynamo", () => {
         ]
       });
     });
+
+    describe("parse()", () => {
+      transform(dynamo.num.is().and(dynamo.num.parse()), {
+        positive: [[{ N: "-1.123" }, -1.123]],
+        negative: []
+      });
+    });
   });
 
   describe("numset", () => {

@@ -142,6 +142,9 @@ export namespace num {
       toi.transform<X, DynamoNumber>(value => value.N as DynamoNumber)
     );
 
+  /**
+   * Check the number formatting.
+   */
   export const format = () =>
     toi.str.regex(
       /^(0|0.0|-?0[.][0-9]*([1-9]$)|-?[1-9][0-9]*([.][0-9]*([1-9]$))?)$/
@@ -158,13 +161,13 @@ export namespace num {
    * Extract either a DynamoDB null or number value. However, the value will be encoded as
    * DynamoNumber, which is a branded string.
    *
-   * Please use toi.num.parse() to parse the value into a JavaScript number however
+   * Please use dynamo.num.parse() to parse the value into a JavaScript number however
    * MAKE SURE YOU UNDERSTAND THAT JAVASCRIPT NUMBERS ARE FLOATING POINT AND THEREFORE
-   * CAN REPRESENT ONLY 53 BIT SIGNED INTEGERS.
+   * CAN REPRESENT ONLY 53 BIT SIGNED INTEGERS. If parsing has failed, it will return NaN.
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           N: toi
@@ -174,6 +177,11 @@ export namespace num {
         })
       )
       .and(pick());
+
+  /**
+   * Parse a DynamoNumber into a number using toi.num.parse.
+   */
+  export const parse = <X extends DynamoNumber>() => toi.num.parse<X>();
 }
 
 /**
@@ -194,7 +202,7 @@ export namespace numset {
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           NS: toi
@@ -226,7 +234,7 @@ export namespace bool {
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           BOOL: toi.required().and(toi.bool.is())
@@ -255,7 +263,7 @@ export namespace bin {
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           B: toi
@@ -287,7 +295,7 @@ export namespace binset {
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           BS: toi
@@ -325,7 +333,7 @@ export namespace list {
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           L: toi.required().and(toi.array.is())
@@ -390,7 +398,7 @@ export namespace map {
    */
   export const is = () =>
     nullable()
-      .and(toi.obj.is())
+      .and(toi.obj.isplain())
       .and(
         toi.obj.keys({
           M: toi

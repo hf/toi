@@ -1,6 +1,6 @@
 {
   "name": "@toi/dynamo",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Toi's Dynamo is a validator and transformer of DynamoDB objects for TypeScript.",
   "main": "build/index.js",
   "files": [
@@ -32,8 +32,8 @@
   "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@toi/toi": "^1.0.12",
-    "@toi/toix": "^1.0.12"
+    "@toi/toi": "^1.0.13",
+    "@toi/toix": "^1.0.13"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
