@@ -423,6 +423,107 @@ describe("toix", () => {
         ]
       });
     });
+
+    describe("isbase32() RFC4648 not-url", () => {
+      toix.str.isbase32(null as any);
+      toix.str.isbase32("default");
+      toix.str.isbase32("rfc4648");
+
+      try {
+        toix.str.isbase32("z-base" as any);
+        throw new Error(
+          "Allowed the use of z-base-32 encoding but it is not implemented."
+        );
+      } catch (error) {}
+
+      assert(toix.str.isbase32(), {
+        positive: [
+          "",
+          "XXXXYYYY", // 40 bits
+          "XX======", // 8 bits
+          "XXXX====", // 16 bits
+          "XXXXY===", // 24 bits
+          "XXXXYYY=", // 32 bits
+          "22227777XXXXYYYY", // 40 + 40 bits
+          "22227777XX======", // 40 + 8 bits
+          "22227777XXXX====", // 40 + 16 bits
+          "22227777XXXXY===", // 40 + 24 bits
+          "22227777XXXXYYY=" //  40 + 32 bits
+        ],
+        negative: [
+          "00000000",
+          "11111111",
+          "88888888",
+          "99999999",
+          "2222333300000000",
+          "2222333311111111",
+          "2222333388888888",
+          "2222333399999999",
+          "========",
+          "======",
+          "====",
+          "===",
+          "=",
+          "XXXXYYYYX=======",
+          "XXXXYYYYXXX=====",
+          "XXXXYYYYXXXXXX==",
+          "aaaaaaaaaaaaaaa=" //  40 + 32 bits
+        ]
+      });
+
+      describe("isbase32('rfc4648-url')", () => {
+        toix.str.isbase32("url");
+
+        assert(toix.str.isbase32("rfc4648-url"), {
+          positive: [
+            "",
+            "XXXXYYYY", // 40 bits
+            "XX======", // 8 bits
+            "XXXX====", // 16 bits
+            "XXXXY===", // 24 bits
+            "XXXXYYY=", // 32 bits
+            "22227777XXXXYYYY", // 40 + 40 bits
+            "22227777XX======", // 40 + 8 bits
+            "22227777XXXX====", // 40 + 16 bits
+            "22227777XXXXY===", // 40 + 24 bits
+            "22227777XXXXYYY=", //  40 + 32 bits
+            "XXXXYYYY", // 40 bits
+            "XX", // 8 bits
+            "XXXX", // 16 bits
+            "XXXXY", // 24 bits
+            "XXXXYYY", // 32 bits
+            "22227777XXXXYYYY", // 40 + 40 bits
+            "22227777XX", // 40 + 8 bits
+            "22227777XXXX", // 40 + 16 bits
+            "22227777XXXXY", // 40 + 24 bits
+            "22227777XXXXYYY" //  40 + 32 bits
+          ],
+          negative: [
+            "00000000",
+            "11111111",
+            "88888888",
+            "99999999",
+            "2222333300000000",
+            "2222333311111111",
+            "2222333388888888",
+            "2222333399999999",
+            "========",
+            "======",
+            "====",
+            "===",
+            "=",
+            "XXXXYYYYX=======",
+            "XXXXYYYYXXX=====",
+            "XXXXYYYYXXXXXX==",
+            "aaaaaaaaaaaaaaa=", //  40 + 32 bits
+            "XXXXYYYYX",
+            "XXXXYYYYXXX",
+            "XXXXYYYYXXXXXX",
+            "aaaaaaaaaaaaaaa" //  40 + 32 bits
+          ]
+        });
+      });
+    });
   });
 
   describe("bool", () => {

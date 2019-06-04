@@ -236,6 +236,46 @@ export namespace str {
       )
     );
   };
+
+  /**
+   * Checks that the string contains valid Base32 encoding.
+   *
+   * There are two supported variants "rfc4648" ("default") and "rfc4648-url" ("url")
+   * that implement the RFC4648 standard for Base32 encoding. It's important to note
+   * that this standard does not allow spaces, CR, LF or other characters. It also does
+   * not allow lowercase letters to be used.
+   *
+   * The "url" variant makes padding optional.
+   *
+   * This also checks the length of the message!
+   */
+  export const isbase32 = <X extends string>(
+    variant: "default" | "rfc4648" | "url" | "rfc4648-url" = "rfc4648"
+  ) => {
+    if ("default" === variant || !variant) {
+      variant = "rfc4648";
+    } else if ("url" === variant) {
+      variant = "rfc4648-url";
+    }
+
+    let regex: RegExp;
+
+    if ("rfc4648" === variant) {
+      regex = /^([A-Z2-7]{8})*($|[A-Z2-7]{2}={6}$|[A-Z2-7]{4}={4}$|[A-Z2-7]{5}={3}$|[A-Z2-7]{7}={1}$)$/;
+    } else if ("rfc4648-url" === variant) {
+      regex = /^([A-Z2-7]{8})*($|[A-Z2-7]{2}(={6})?$|[A-Z2-7]{4}(={4})?$|[A-Z2-7]{5}(={3})?$|[A-Z2-7]{7}(={1})?$)$/;
+    } else {
+      throw new Error(`Unknown Base32 variant ${variant}`);
+    }
+
+    return wrap(
+      "str.isbase32",
+      allow<X, X>(
+        value => !!value.match(regex),
+        `value is not a valid ${variant} base32, it should match ${regex}`
+      )
+    );
+  };
 }
 
 /**
