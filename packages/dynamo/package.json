@@ -33,7 +33,7 @@
   "license": "MIT",
   "dependencies": {
     "@toi/toi": "^1.0.12",
-    "@toix/toi": "^1.0.12"
+    "@toi/toix": "^1.0.12"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
