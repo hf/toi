@@ -70,7 +70,7 @@ import * as toi from "@toi/toi";
 
 const isObject = toi
   .required() // make toi reject null or undefined
-  .and(toi.obj.is()) // forces that the value is an object
+  .and(toi.obj.isplain()) // forces that the value is a plain JS object
   .and(
     toi.obj.keys({
       num: toi.required().and(toi.num.is()),

@@ -600,6 +600,8 @@ export namespace array {
 export namespace obj {
   /**
    * Checks that the value is a JavaScript object excluding `null`.
+   * Usually when validating HTTP body input you want to use toi.obj.isplain() as that
+   * can mitigate some prototype-pollution attacks.
    */
   export const is = <X>() =>
     wrap(
@@ -607,6 +609,25 @@ export namespace obj {
       allow<X, object>(
         value => null !== value && "object" === typeof value,
         `value is not an object type`
+      )
+    );
+
+  /**
+   * Checks that the object is a plain JavaScript object, i.e. an object whose
+   * prototype is Object.prototype and no attempt has been made to insert a
+   * __proto__ property as a way to change the object's prototype. `null` is not regarded
+   * as an object, though it is.
+   */
+  export const isplain = <X>() =>
+    wrap(
+      "obj.isplain",
+      allow<X, object>(
+        value =>
+          null !== value &&
+          "object" === typeof value &&
+          !Object.getOwnPropertyDescriptor(value, "__proto__") &&
+          Object.prototype === Object.getPrototypeOf(value),
+        "value is not an object or its prototype is not Object.prototype"
       )
     );
 

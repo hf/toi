@@ -402,7 +402,7 @@ describe("toi", () => {
   });
 
   describe("obj", () => {
-    describe("is", () => {
+    describe("is()", () => {
       assert(toi.obj.is(), {
         positive: [
           [],
@@ -413,6 +413,17 @@ describe("toi", () => {
           new Boolean(false)
         ],
         negative: [NaN, false, "", 0]
+      });
+    });
+
+    describe("isplain()", () => {
+      assert(toi.obj.isplain(), {
+        positive: [{}, { actAsObject: true, __proto__: Object.prototype }],
+        negative: [
+          { actAsFunction: true, __proto__: Function.prototype },
+          [],
+          new String()
+        ]
       });
     });
 
