@@ -727,6 +727,11 @@ export namespace obj {
           if (!Object.getOwnPropertyDescriptor(value, key)) {
             if (!missing[key]) {
               throw new ValidationError(`key ${key} in value is missing`, key);
+            } else {
+              // still run the validator even if the value is missing, so that if
+              // someone has said that the key can be missing but they've put a required validator
+              // the validation will fail
+              output[key] = (structure as any)[key]((value as any)[key]);
             }
           } else {
             output[key] = (structure as any)[key]((value as any)[key]);
