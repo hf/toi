@@ -353,6 +353,41 @@ describe("toix", () => {
       });
     });
 
+    describe("split('.')", () => {
+      transform(toix.str.split("."), {
+        positive: [["hello.world", ["hello", "world"]]],
+        negative: []
+      });
+    });
+
+    describe("split(/[.]/)", () => {
+      transform(toix.str.split(/[.]/), {
+        positive: [["hello.world", ["hello", "world"]]],
+        negative: []
+      });
+    });
+
+    describe("replace('.', ':')", () => {
+      transform(toix.str.replace(".", ":"), {
+        positive: [[".", ":"]],
+        negative: []
+      });
+    });
+
+    describe("replace(/[.]/, ':')", () => {
+      transform(toix.str.replace(/[.]/, ":"), {
+        positive: [[".", ":"]],
+        negative: []
+      });
+    });
+
+    describe("replace(/[.]/, () => ':')", () => {
+      transform(toix.str.replace(/[.]/, () => ":"), {
+        positive: [[".", ":"]],
+        negative: []
+      });
+    });
+
     describe("phoneNumber()", () => {
       assert(toix.str.phoneNumber(), {
         positive: ["+8006927753", "+3891234567", "8006927753"],

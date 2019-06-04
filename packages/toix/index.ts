@@ -287,6 +287,36 @@ export namespace str {
       )
     );
   };
+
+  /**
+   * Split a string into multiple strings at a specified pattern. Exactly like String#split.
+   */
+  export const split = <X extends string>(
+    pattern: string | RegExp,
+    limit?: number
+  ) =>
+    wrap(
+      "str.split",
+      transform<X, string[]>(value => value.split(pattern, limit))
+    );
+
+  /**
+   * Replaces a pattern within a string with another string. Exactly like String#replace.
+   */
+  export const replace = <X extends string>(
+    pattern: string | RegExp,
+    replacement: string | ((substring: string, ...args: any[]) => string)
+  ) =>
+    wrap(
+      "str.replace",
+      transform<X, string>(value => {
+        if ("string" === typeof replacement) {
+          return value.replace(pattern, replacement);
+        }
+
+        return value.replace(pattern, replacement);
+      })
+    );
 }
 
 /**
