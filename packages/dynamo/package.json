@@ -49,10 +49,22 @@
     "typescript": "^3.0.0"
   },
   "nyc": {
-    "include": ["build/**/*.js"],
-    "exclude": ["build/**/*.spec.js", "build/**/*.spec.jsx"],
-    "extension": [".js", ".jsx"],
-    "reporter": ["text-summary", "html", "lcovonly"],
+    "include": [
+      "build/**/*.js"
+    ],
+    "exclude": [
+      "build/**/*.spec.js",
+      "build/**/*.spec.jsx"
+    ],
+    "extension": [
+      ".js",
+      ".jsx"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "lcovonly"
+    ],
     "sourceMap": true,
     "instrument": true
   }
