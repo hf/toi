@@ -273,8 +273,16 @@ describe("toix", () => {
       });
     });
 
-    describe("urlAsString()", () => {
-      assert(toix.str.urlAsString(), {
+    describe("DEPRECATED urlAsString()", () => {
+      it("should redirect to isurl()", () => {
+        if (toix.str.urlAsString !== toix.str.isurl) {
+          throw new Error("toix.str.urlAsString is not toix.str.isurl!");
+        }
+      });
+    });
+
+    describe("isurl()", () => {
+      assert(toix.str.isurl(), {
         positive: [
           "http://www.google.com",
           "https://www.google.com",

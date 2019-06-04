@@ -26,8 +26,7 @@ export namespace str {
     );
 
   /**
-   * Checks for a valid URL. Accepts an URL, and optional
-   * parameters like protocol and port.
+   * Checks and parses a URL-string into a URL object.
    */
   export const url = <X extends string, R extends string, O extends string>(
     options: { protocol?: R; port?: O } = {}
@@ -35,51 +34,63 @@ export namespace str {
     wrap(
       "str.url",
       transform<X, URL & { protocol: R; port: O }>(value => {
+        let url: URL;
+
         try {
-          const url = new URL(value);
-
-          if (options && options.port && options.port !== url.port) {
-            throw new ValidationError(`Invalid port: ${options.port}`, value);
-          }
-
-          if (
-            options &&
-            options.protocol &&
-            options.protocol !== url.protocol
-          ) {
-            throw new ValidationError(
-              `Invalid protocol: ${options.protocol}`,
-              value
-            );
-          }
-
-          return url as URL & { protocol: R; port: O };
+          url = new URL(value);
         } catch (error) {
-          if (error instanceof TypeError) {
-            throw new ValidationError("Not a valid URL", value);
-          }
-
-          throw error;
+          throw new ValidationError(
+            "value does not look like a proper URL",
+            value
+          );
         }
+
+        if (options && options.port && options.port !== url.port) {
+          throw new ValidationError(
+            `value is a proper URL but the expected port ${
+              options.port
+            } does not match ${url.port}`,
+            value
+          );
+        }
+
+        if (options && options.protocol && options.protocol !== url.protocol) {
+          throw new ValidationError(
+            `value is a proper URL but the expected protocol '${
+              options.protocol
+            }' does not match '${url.protocol}'`,
+            value
+          );
+        }
+
+        return url as URL & { protocol: R; port: O };
       })
     );
 
   /**
    * Checks for a valid URL. Accepts an URL as string. Uses the 'URL()' constructor for validation.
    */
-  export const urlAsString = <X extends string>() =>
+  export const isurl = <X extends string>() =>
     wrap(
-      "str.urlAsString",
+      "str.isurl",
       transform<X, string>(value => {
         try {
           new URL(value);
           return value;
         } catch (error) {
           // it will always be a type error
-          throw new ValidationError("Not a valid URL", value);
+          throw new ValidationError(
+            "value does not look like a valid URL",
+            value
+          );
         }
       })
     );
+
+  /**
+   * @deprecated Please use isurl.
+   */
+  export const urlAsString = isurl;
 
   /**
    * Checks that the value is a GUID. By default it accepts any version of GUID and does not
