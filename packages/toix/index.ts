@@ -197,6 +197,45 @@ export namespace str {
         "value does not match E.164 numbering plan"
       )
     );
+
+  /**
+   * Checks that a string contains a valid Base64 encoding.
+   *
+   * There are two supported variants "rfc4648" ("default") and "rfc4648-url" ("url") that
+   * follow the RFC4648 Base64 encoding standard. It's important to note that this
+   * RFC does not support adding spaces, CR or LF characters in the string!
+   * That is RFC2045 which is not supported by this function at this time.
+   *
+   * This function also strictly checks the number of characters -- the string length
+   * must be a multiple of 4 with padding as necessary (and when required).
+   */
+  export const isbase64 = <X extends string>(
+    variant: "default" | "rfc4648" | "url" | "rfc4648-url" = "rfc4648"
+  ) => {
+    if ("default" === variant || !variant) {
+      variant = "rfc4648";
+    } else if ("url" === variant) {
+      variant = "rfc4648-url";
+    }
+
+    let regex: RegExp;
+
+    if ("rfc4648" === variant) {
+      regex = /^([a-z0-9\/+]{4})*($|[a-z0-9\/+]{3}=$|[a-z0-9\/+]{2}==$)$/i;
+    } else if ("rfc4648-url" === variant) {
+      regex = /^([a-z0-9_-]{4})*($|[a-z0-9_-]{3}=?$|[a-z0-9_-]{2}(==)?$)$/i;
+    } else {
+      throw new Error(`Unknown Base64 variant ${variant}`);
+    }
+
+    return wrap(
+      "str.isbase64",
+      allow<X, X>(
+        value => !!value.match(regex),
+        `value is not a valid ${variant} base64, it should match ${regex}`
+      )
+    );
+  };
 }
 
 /**

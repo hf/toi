@@ -351,6 +351,78 @@ describe("toix", () => {
         negative: ["+012", "+1", "+", "1", "+1234567891234567"]
       });
     });
+
+    describe("isbase64() RFC4648 not-url", () => {
+      toix.str.isbase64(null as any);
+      toix.str.isbase64("rfc4648");
+      toix.str.isbase64("default");
+
+      try {
+        toix.str.isbase64("rfc2045" as any);
+        throw new Error("Allowed to specify RFC2045 but not implemented!");
+      } catch (error) {}
+
+      assert(toix.str.isbase64(), {
+        positive: [
+          "",
+          "XX==",
+          "XXX=",
+          "XXXX",
+          "11112222",
+          "111122==",
+          "1111222=",
+          "111122223333",
+          "1111222233==",
+          "11112222333="
+        ],
+        negative: [
+          "X",
+          "XX",
+          "XXX",
+          "#",
+          "____",
+          "----",
+          "==",
+          "=",
+          "====",
+          "X===",
+          "X==",
+          "X="
+        ]
+      });
+    });
+
+    describe("isbase64('rfc4648-url')", () => {
+      toix.str.isbase64("url");
+      toix.str.isbase64("rfc4648-url");
+
+      assert(toix.str.isbase64("rfc4648-url"), {
+        positive: [
+          "",
+          "XX",
+          "XXX",
+          "1111",
+          "11112222",
+          "1111222",
+          "111122",
+          "1111222=",
+          "111122==",
+          "____--=="
+        ],
+        negative: [
+          "X",
+          "#",
+          "////",
+          "++++",
+          "==",
+          "=",
+          "====",
+          "X===",
+          "X==",
+          "X="
+        ]
+      });
+    });
   });
 
   describe("bool", () => {
