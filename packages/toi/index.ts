@@ -365,11 +365,12 @@ export namespace num {
     );
 
   /**
-   * Transform a string-based value into a number via the {@link parseInt} function.
+   * Transform a string-based value into a number via the {@link Number} function.
    * It will return `NaN` if unable to parse!
    */
-  export const parse = <X extends string>(radix: number = 10) =>
-    wrap("num.parse", transform<X, number>(value => parseInt(value, radix)));
+  export const parse = <X extends string>(
+    parser: (value: X) => number = Number
+  ) => wrap("num.parse", transform<X, number>(value => parser(value)));
 
   /**
    * Check that the number-based value is at least `min`.
