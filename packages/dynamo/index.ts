@@ -352,11 +352,8 @@ export namespace map {
    * Pick the map from a { M: [key: string]: dynamo value } DynamoDB value.
    * You should usually use dynamo.map.is() instead.
    */
-  export const pick = <X extends { M: { [key: string]: unknown } }>() =>
-    toi.wrap(
-      "dynamo.m",
-      toi.transform<X, { [key: string]: unknown }>(value => value.M)
-    );
+  export const pick = <X extends { M: object }>() =>
+    toi.wrap("dynamo.m", toi.transform<X, object>(value => value.M));
 
   /**
    * Check that the map has proper keys. Usually you should use dynamo.map.is() instead.
@@ -364,7 +361,7 @@ export namespace map {
   export const properKeys = <X extends object>() =>
     toi.wrap(
       "dynamo.map.properKeys",
-      toi.transform<X, { [key: string]: unknown }>(value => {
+      toi.transform<X, object>(value => {
         const keys = Object.getOwnPropertyNames(value);
         const reasons: toi.ValidationError[] = [];
         let hasError = false;
