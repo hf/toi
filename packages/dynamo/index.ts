@@ -65,8 +65,6 @@ export const nullable = <X>() =>
     })
   );
 
-const returnNull = () => toi.wrap("dynamo.null", toi.transform(() => null));
-
 /**
  * Extracts null from the dreaded { NULL: true } DynamoDB value.
  * (But only null and does not accept anything else!)
@@ -75,7 +73,7 @@ export const isnull = () =>
   toi.obj
     .is()
     .and(toi.obj.keys({ NULL: toi.required().and(toi.bool.truth()) }))
-    .and(returnNull());
+    .and(toi.wrap("dynamo.null", toi.transform<any, null>(() => null)));
 
 /**
  * Transformers for the { S: string } DynamoDB value.

@@ -122,7 +122,7 @@ export function wrap<I, X>(
     [name]: (value: I) => func(value)
   };
 
-  const validatorFunction = container[name];
+  const validatorFunction: any = container[name];
 
   return Object.assign(validatorFunction, {
     and: <B>(validator: Validator<X, B>): Validator<I, B> =>
@@ -131,6 +131,7 @@ export function wrap<I, X>(
       )
   });
 }
+
 /**
  * Wraps a boolean-returning function as a function ready-to-use in {@link #wrap}.
  *
@@ -169,7 +170,7 @@ export function allow<I, X>(bool: (value: I) => boolean, failure: string) {
 export function transform<I, X>(transformer: (value: I) => X) {
   return (value: I): I extends null | undefined ? X | null | undefined : X => {
     if (null === value || undefined === value) {
-      return value;
+      return value as any;
     }
 
     return transformer(value) as any;
