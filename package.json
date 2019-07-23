@@ -6,10 +6,8 @@
     "packages/dynamo"
   ],
   "scripts": {
-    "build": "wsrun build",
-    "prettier": [
-      "prettier -l **/*.{ts,json,md}"
-    ],
+    "build": "wsrun build --stages",
+    "prettier": "prettier -l **/*.{ts,json,md}",
     "coverage": "wsrun coverage",
     "test": "wsrun test --serial",
     "publish": "wsrun publish"

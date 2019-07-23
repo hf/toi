@@ -2,6 +2,13 @@
  * Toi is a TypeScript validator, inspired by Joi.
  */
 
+
+/**
+ * Mirrors the null or undefinedness of T into the type U
+ */
+type TransferNullability<T, U> = T extends null | undefined ? U | null | undefined : U;
+
+
 /**
  * A validator is a function that throws a {@link ValidationError} when its input value
  * does not match it's output type.
@@ -15,19 +22,19 @@
  *
  * @see #and
  */
-export interface Validator<I, V> {
-  (value: I): V;
+export interface Validator<Input, Output> {
+  (value: Input): Output;
 
   /**
    * Creates a new validator by combining the validation logic of the this validator
    * and the provide validator, in order.
    */
-  and<X, Y extends V>(
+  and<NewOutput>(
     validator: Validator<
-      Y,
-      V extends null | undefined ? X | null | undefined : X
+      Output,
+      TransferNullability<Output, NewOutput>
     >
-  ): Validator<I, V extends null | undefined ? X | null | undefined : X>;
+  ): Validator<Input, TransferNullability<Output, NewOutput>>;
 }
 
 /**
@@ -146,7 +153,7 @@ export function wrap<I, X>(
  * @return function a function ready to use in {@link #wrap}
  */
 export function allow<I, X>(bool: (value: I) => boolean, failure: string) {
-  return (allow: I): I extends null | undefined ? X | null | undefined : X => {
+  return (allow: I): TransferNullability<I, X>  => {
     if (undefined === allow || null === allow || bool(allow)) {
       return allow as any;
     }
@@ -168,9 +175,9 @@ export function allow<I, X>(bool: (value: I) => boolean, failure: string) {
  * @return function a function ready to use in {@link #wrap}
  */
 export function transform<I, X>(transformer: (value: I) => X) {
-  return (value: I): I extends null | undefined ? X | null | undefined : X => {
+  return (value: I): TransferNullability<I, X> => {
     if (null === value || undefined === value) {
-      return value as any;
+      return value as any
     }
 
     return transformer(value) as any;
@@ -407,6 +414,7 @@ export namespace num {
     );
 }
 
+
 /**
  * Boolean type validators.
  */
@@ -429,19 +437,19 @@ export namespace bool {
   /**
    * Check that the value is strictly `true`.
    */
-  export const truth = <X extends boolean>() =>
+  export const truth = () =>
     wrap(
       "bool.truth",
-      allow<X, true>(value => true === value, "value is not true")
+      allow<unknown, true>(value => true === value, "value is not true")
     );
 
   /**
    * Check that the value is strictly `false`.
    */
-  export const falseness = <X extends boolean>() =>
+  export const falseness = () =>
     wrap(
       "bool.falseness",
-      allow<X, false>(value => false === value, "value is not false")
+      allow<unknown, false>(value => false === value, "value is not false")
     );
 
   /**
