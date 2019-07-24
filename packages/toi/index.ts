@@ -339,10 +339,18 @@ export namespace num {
 
   /**
    * Transform a string-based value into a number via the {@link Number} function.
-   * It will return `NaN` if unable to parse!
+   * It will return `NaN` if unable to parse but you can pass in throwOnNaN as an option.
    */
-  export const parse = <X extends string>(parser: (value: X) => number = Number) =>
-    wrap("num.parse", transform<X, number>(value => parser(value)));
+  export const parse = <X extends string>(
+    options: { throwOnNaN: boolean } = { throwOnNaN: false },
+    parser: (value: X) => number = Number
+  ) => {
+    if (options && options.throwOnNaN) {
+      return wrap("num.parse", transform<X, number>(value => parser(value))).and(is());
+    } else {
+      return wrap("num.parse", transform<X, number>(value => parser(value)));
+    }
+  };
 
   /**
    * Check that the number-based value is at least `min`.

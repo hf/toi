@@ -253,6 +253,13 @@ describe("toi", () => {
       });
     });
 
+    describe("parse (with throwOnNaN set to true)", () => {
+      transform(toi.num.parse({ throwOnNaN: true }), {
+        positive: [["0", 0], ["1", 1], ["-1", -1], ["+1", 1], ["-1.23", -1.23]],
+        negative: ["not-a-number"]
+      });
+    });
+
     describe("integer", () => {
       transform(toi.num.integer(), {
         positive: [[0, 0], [1, 1], [-1, -1], [NaN, NaN], [0.1, 0], [-0.1, 0], [1.1, 1], [-1.1, -1]]
