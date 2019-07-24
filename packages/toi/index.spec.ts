@@ -38,10 +38,7 @@ function equality(a: any, b: any): boolean {
   }
 
   if (Array.isArray(a) && Array.isArray(b)) {
-    return (
-      a.length === b.length &&
-      a.reduce((a, i, index) => a && i == b[index], true)
-    );
+    return a.length === b.length && a.reduce((a, i, index) => a && i == b[index], true);
   }
 
   if (a instanceof Date && b instanceof Date) {
@@ -155,47 +152,17 @@ describe("toi", () => {
 
     assert(toi.any.instance(Date), {
       positive: [new Date()],
-      negative: [
-        {},
-        [],
-        0,
-        "",
-        NaN,
-        false,
-        {},
-        [],
-        new String(),
-        new Number(),
-        new Boolean()
-      ]
+      negative: [{}, [], 0, "", NaN, false, {}, [], new String(), new Number(), new Boolean()]
     });
 
     assert(toi.any.only("a", "b", "c"), {
       positive: ["a", "b", "c"],
-      negative: [
-        0,
-        NaN,
-        new String("a"),
-        new String("b"),
-        new String("c"),
-        false,
-        {},
-        []
-      ]
+      negative: [0, NaN, new String("a"), new String("b"), new String("c"), false, {}, []]
     });
 
     assert(toi.any.values("a", "b", "c"), {
       positive: ["a", "b", "c"],
-      negative: [
-        0,
-        NaN,
-        new String("a"),
-        new String("b"),
-        new String("c"),
-        false,
-        {},
-        []
-      ]
+      negative: [0, NaN, new String("a"), new String("b"), new String("c"), false, {}, []]
     });
   });
 
@@ -238,13 +205,7 @@ describe("toi", () => {
     });
     describe("regex(/^[^a]?(a?)[^a]?$/, '$1')", () => {
       transform(toi.str.regex(/^[^a]?(a?)[^a]?$/, "$1"), {
-        positive: [
-          ["", ""],
-          ["a", "a"],
-          [" a", "a"],
-          ["a ", "a"],
-          [" a ", "a"]
-        ],
+        positive: [["", ""], ["a", "a"], [" a", "a"], ["a ", "a"], [" a ", "a"]],
         negative: ["aba"]
       });
     });
@@ -294,16 +255,7 @@ describe("toi", () => {
 
     describe("integer", () => {
       transform(toi.num.integer(), {
-        positive: [
-          [0, 0],
-          [1, 1],
-          [-1, -1],
-          [NaN, NaN],
-          [0.1, 0],
-          [-0.1, 0],
-          [1.1, 1],
-          [-1.1, -1]
-        ]
+        positive: [[0, 0], [1, 1], [-1, -1], [NaN, NaN], [0.1, 0], [-0.1, 0], [1.1, 1], [-1.1, -1]]
       });
     });
   });
@@ -319,38 +271,14 @@ describe("toi", () => {
     describe("truth", () => {
       assert(toi.bool.truth(), {
         positive: [true],
-        negative: [
-          false,
-          0,
-          1,
-          -1,
-          NaN,
-          "",
-          "a",
-          {},
-          [],
-          new Boolean(false),
-          new Boolean(true)
-        ]
+        negative: [false, 0, 1, -1, NaN, "", "a", {}, [], new Boolean(false), new Boolean(true)]
       });
     });
 
     describe("falseness", () => {
       assert(toi.bool.falseness(), {
         positive: [false],
-        negative: [
-          true,
-          0,
-          -1,
-          1,
-          NaN,
-          "",
-          "a",
-          {},
-          [],
-          new Boolean(true),
-          new Boolean(false)
-        ]
+        negative: [true, 0, -1, 1, NaN, "", "a", {}, [], new Boolean(true), new Boolean(false)]
       });
     });
 
@@ -405,14 +333,7 @@ describe("toi", () => {
   describe("obj", () => {
     describe("is()", () => {
       assert(toi.obj.is(), {
-        positive: [
-          [],
-          {},
-          new Date(),
-          new String("hello"),
-          new Number(1),
-          new Boolean(false)
-        ],
+        positive: [[], {}, new Date(), new String("hello"), new Number(1), new Boolean(false)],
         negative: [NaN, false, "", 0]
       });
     });
@@ -420,11 +341,7 @@ describe("toi", () => {
     describe("isplain()", () => {
       assert(toi.obj.isplain(), {
         positive: [{}, { actAsObject: true, __proto__: Object.prototype }],
-        negative: [
-          { actAsFunction: true, __proto__: Function.prototype },
-          [],
-          new String()
-        ]
+        negative: [{ actAsFunction: true, __proto__: Function.prototype }, [], new String()]
       });
     });
 
@@ -435,18 +352,8 @@ describe("toi", () => {
           b: toi.required().and(toi.num.is())
         }),
         {
-          positive: [
-            { a: "", b: 0 },
-            { a: "hello", b: 2 },
-            { a: "a", b: 0, c: "c" }
-          ],
-          negative: [
-            { a: 0, b: 0 },
-            { a: "hello", b: "world" },
-            {},
-            { a: "hello" },
-            { b: 0 }
-          ]
+          positive: [{ a: "", b: 0 }, { a: "hello", b: 2 }, { a: "a", b: 0, c: "c" }],
+          negative: [{ a: 0, b: 0 }, { a: "hello", b: "world" }, {}, { a: "hello" }, { b: 0 }]
         }
       );
     });
@@ -486,9 +393,7 @@ describe("toi", () => {
           }
 
           if (!((reasons as any)["a"] instanceof toi.ValidationError)) {
-            throw new Error(
-              "Reasons does not include validation error for failed field."
-            );
+            throw new Error("Reasons does not include validation error for failed field.");
           }
 
           return error;
@@ -538,14 +443,7 @@ describe("toi", () => {
     describe("and(['a', 'b'])", () => {
       assert(toi.obj.and(["a", "b"]), {
         positive: [{ a: 0, b: 1 }, { a: 0, b: 1, c: 2 }],
-        negative: [
-          {},
-          { a: 0 },
-          { b: 0 },
-          { c: 1 },
-          { a: 0, c: 1 },
-          { b: 0, c: 2 }
-        ]
+        negative: [{}, { a: 0 }, { b: 0 }, { c: 1 }, { a: 0, c: 1 }, { b: 0, c: 2 }]
       });
     });
 
@@ -686,16 +584,12 @@ describe("toi", () => {
             }
 
             if (reasons.length !== input.length) {
-              throw new Error(
-                "Reasons are an array but with different length from input."
-              );
+              throw new Error("Reasons are an array but with different length from input.");
             }
 
             reasons.forEach((reason, index) => {
               if (!(reason instanceof toi.ValidationError)) {
-                throw new Error(
-                  `Reason at index ${index} is not a validation error. ${reason}`
-                );
+                throw new Error(`Reason at index ${index} is not a validation error. ${reason}`);
               }
             });
 
@@ -752,11 +646,7 @@ describe("toi", () => {
 
     describe("seconds", () => {
       transform(toi.date.seconds(), {
-        positive: [
-          [0, new Date(0)],
-          [1, new Date(1000)],
-          [-1, new Date(-1000)]
-        ],
+        positive: [[0, new Date(0)], [1, new Date(1000)], [-1, new Date(-1000)]],
         negative: [NaN]
       });
     });

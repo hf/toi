@@ -39,17 +39,14 @@ export namespace str {
         try {
           url = new URL(value);
         } catch (error) {
-          throw new ValidationError(
-            "value does not look like a proper URL",
-            value
-          );
+          throw new ValidationError("value does not look like a proper URL", value);
         }
 
         if (options && options.port && options.port !== url.port) {
           throw new ValidationError(
-            `value is a proper URL but the expected port ${
-              options.port
-            } does not match ${url.port}`,
+            `value is a proper URL but the expected port ${options.port} does not match ${
+              url.port
+            }`,
             value
           );
         }
@@ -79,10 +76,7 @@ export namespace str {
           return value;
         } catch (error) {
           // it will always be a type error
-          throw new ValidationError(
-            "value does not look like a valid URL",
-            value
-          );
+          throw new ValidationError("value does not look like a valid URL", value);
         }
       })
     );
@@ -134,10 +128,7 @@ export namespace str {
   export const hostname = <X extends string>() =>
     wrap(
       "str.hostname",
-      allow<X, X>(
-        value => !!value.match(/^[a-z0-9-]+(\.[a-z0-9-]+)+$/),
-        "value is not a hostname"
-      )
+      allow<X, X>(value => !!value.match(/^[a-z0-9-]+(\.[a-z0-9-]+)+$/), "value is not a hostname")
     );
 
   /**
@@ -146,10 +137,7 @@ export namespace str {
   export const startsWith = <X extends string>(start: string) =>
     wrap(
       "str.startsWith",
-      allow<X, X>(
-        value => !!value.startsWith(start),
-        `value does not start with: ${start}`
-      )
+      allow<X, X>(value => !!value.startsWith(start), `value does not start with: ${start}`)
     );
 
   /**
@@ -158,10 +146,7 @@ export namespace str {
   export const endsWith = <X extends string>(end: string) =>
     wrap(
       "str.endsWith",
-      allow<X, X>(
-        value => !!value.endsWith(end),
-        `value does not end with: ${end}`
-      )
+      allow<X, X>(value => !!value.endsWith(end), `value does not end with: ${end}`)
     );
 
   /**
@@ -170,10 +155,7 @@ export namespace str {
   export const contains = <X extends string>(part: string) =>
     wrap(
       "str.contains",
-      allow<X, X>(
-        value => !!value.includes(part),
-        `value does not contain: ${part}`
-      )
+      allow<X, X>(value => !!value.includes(part), `value does not contain: ${part}`)
     );
 
   /**
@@ -203,8 +185,7 @@ export namespace str {
     wrap(
       "str.phoneNumber",
       allow<X, X>(
-        value =>
-          !!value.match(/^\+?[1-9]([0-9]{3,14}|[0-9]{2,14}|[0-9]{1,14})$/),
+        value => !!value.match(/^\+?[1-9]([0-9]{3,14}|[0-9]{2,14}|[0-9]{1,14})$/),
         "value does not match E.164 numbering plan"
       )
     );
@@ -291,14 +272,8 @@ export namespace str {
   /**
    * Split a string into multiple strings at a specified pattern. Exactly like String#split.
    */
-  export const split = <X extends string>(
-    pattern: string | RegExp,
-    limit?: number
-  ) =>
-    wrap(
-      "str.split",
-      transform<X, string[]>(value => value.split(pattern, limit))
-    );
+  export const split = <X extends string>(pattern: string | RegExp, limit?: number) =>
+    wrap("str.split", transform<X, string[]>(value => value.split(pattern, limit)));
 
   /**
    * Replaces a pattern within a string with another string. Exactly like String#replace.
@@ -333,9 +308,7 @@ export namespace bool {
     wrap(
       "bool.parse",
       transform<X, boolean | null>(value => {
-        const match = value.match(
-          /^((YES|TRUE|ON|Y|T|1)|(NO|FALSE|OFF|N|F|0))$/i
-        );
+        const match = value.match(/^((YES|TRUE|ON|Y|T|1)|(NO|FALSE|OFF|N|F|0))$/i);
 
         if (!match) {
           throw new ValidationError(
@@ -360,9 +333,7 @@ export namespace json {
   /**
    * Parse a string into an unknown JS value.
    */
-  export const parse = <X extends string>(
-    parser: (text: X) => unknown = JSON.parse
-  ) =>
+  export const parse = <X extends string>(parser: (text: X) => unknown = JSON.parse) =>
     wrap(
       "json.parse",
       transform<X, unknown>(value => {
@@ -377,8 +348,6 @@ export namespace json {
   /**
    * Stringify some unknown JS value to a JSON string.
    */
-  export const stringify = <X>(
-    stringifier: (value: X) => string = JSON.stringify
-  ) =>
+  export const stringify = <X>(stringifier: (value: X) => string = JSON.stringify) =>
     wrap("json.stringify", transform<X, string>(value => stringifier(value)));
 }

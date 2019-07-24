@@ -135,10 +135,7 @@ export namespace num {
    * Pick the value from a { N: number as string } DynamoDB value. You should usually use dynamo.num.is() instead.
    */
   export const pick = <X extends { N: string }>() =>
-    toi.wrap(
-      "dynamo.n",
-      toi.transform<X, DynamoNumber>(value => value.N as DynamoNumber)
-    );
+    toi.wrap("dynamo.n", toi.transform<X, DynamoNumber>(value => value.N as DynamoNumber));
 
   /**
    * Check the number formatting.
@@ -190,10 +187,7 @@ export namespace numset {
    * Pick the value from a { NS: [ value as string ] } DynamoDB value. You should usually use dynamo.numset.is() instead.
    */
   export const pick = <X extends { NS: string[] }>() =>
-    toi.wrap(
-      "dynamo.ns",
-      toi.transform<X, DynamoNumber[]>(value => value.NS as DynamoNumber[])
-    );
+    toi.wrap("dynamo.ns", toi.transform<X, DynamoNumber[]>(value => value.NS as DynamoNumber[]));
 
   /**
    * Extract either a DynamoDB null or number set values as DynamoNumber[].
@@ -207,11 +201,7 @@ export namespace numset {
             .required()
             .and(toi.array.is())
             .and(toi.array.min(1))
-            .and(
-              toi.array.items(
-                toi.required().and(toi.str.is().and(num.format()))
-              )
-            )
+            .and(toi.array.items(toi.required().and(toi.str.is().and(num.format()))))
         })
       )
       .and(pick());
@@ -283,9 +273,7 @@ export namespace binset {
   export const pick = <X extends { BS: string[] }>() =>
     toi.wrap(
       "dynamo.bs",
-      toi.transform<X, Buffer[]>(value =>
-        value.BS.map(i => Buffer.from(i, "base64"))
-      )
+      toi.transform<X, Buffer[]>(value => value.BS.map(i => Buffer.from(i, "base64")))
     );
 
   /**
@@ -368,20 +356,14 @@ export namespace map {
           if ("string" !== typeof keys[i] || !keys[i]) {
             hasError = true;
             reasons[i] = new toi.ValidationError(
-              `key at position ${i} with name '${
-                keys[i]
-              }' is not a string or is empty`,
+              `key at position ${i} with name '${keys[i]}' is not a string or is empty`,
               keys[i]
             );
           }
         }
 
         if (hasError) {
-          throw new toi.ValidationError(
-            `map has improper keys`,
-            value,
-            reasons
-          );
+          throw new toi.ValidationError(`map has improper keys`, value, reasons);
         }
 
         return value as any;
