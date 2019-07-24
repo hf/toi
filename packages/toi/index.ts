@@ -3,6 +3,11 @@
  */
 
 /**
+ * Mirrors the null or undefinedness of T into the type U
+ */
+type TransferNullability<T, U> = T extends null | undefined ? U | null | undefined : U;
+
+/**
  * A validator is a function that throws a {@link ValidationError} when its input value
  * does not match it's output type.
  *
@@ -15,19 +20,16 @@
  *
  * @see #and
  */
-export interface Validator<I, V> {
-  (value: I): V;
+export interface Validator<Input, Output> {
+  (value: Input): Output;
 
   /**
    * Creates a new validator by combining the validation logic of the this validator
    * and the provide validator, in order.
    */
-  and<X, Y extends V>(
-    validator: Validator<
-      Y,
-      V extends null | undefined ? X | null | undefined : X
-    >
-  ): Validator<I, V extends null | undefined ? X | null | undefined : X>;
+  and<NewOutput>(
+    validator: Validator<Output, TransferNullability<Output, NewOutput>>
+  ): Validator<Input, TransferNullability<Output, NewOutput>>;
 }
 
 /**
@@ -56,9 +58,7 @@ export class ValidationError extends Error {
    * optionality or similar). It's a 1:1 map of the key-value pairs in the object that did
    * not pass validation.
    */
-  reasons?:
-    | ValidationError[]
-    | { [key: string]: ValidationError; [key: number]: ValidationError };
+  reasons?: ValidationError[] | { [key: string]: ValidationError; [key: number]: ValidationError };
 
   /**
    * Create a new {@link ValidationError} object.
@@ -70,9 +70,7 @@ export class ValidationError extends Error {
   constructor(
     message: string,
     value: unknown,
-    reasons?:
-      | ValidationError[]
-      | { [key: string]: ValidationError; [key: number]: ValidationError }
+    reasons?: ValidationError[] | { [key: string]: ValidationError; [key: number]: ValidationError }
   ) {
     super(message);
     this.value = value;
@@ -114,10 +112,7 @@ function isError<E extends Error, O>(
  *
  * @return Validator a validator based on the provided function
  */
-export function wrap<I, X>(
-  name: string,
-  func: (value: I) => X
-): Validator<I, X> {
+export function wrap<I, X>(name: string, func: (value: I) => X): Validator<I, X> {
   const container = {
     [name]: (value: I) => func(value)
   };
@@ -126,9 +121,7 @@ export function wrap<I, X>(
 
   return Object.assign(validatorFunction, {
     and: <B>(validator: Validator<X, B>): Validator<I, B> =>
-      wrap<I, B>(`${name}.and(${validator.name})`, value =>
-        validator(validatorFunction(value))
-      )
+      wrap<I, B>(`${name}.and(${validator.name})`, value => validator(validatorFunction(value)))
   });
 }
 
@@ -146,7 +139,7 @@ export function wrap<I, X>(
  * @return function a function ready to use in {@link #wrap}
  */
 export function allow<I, X>(bool: (value: I) => boolean, failure: string) {
-  return (allow: I): I extends null | undefined ? X | null | undefined : X => {
+  return (allow: I): TransferNullability<I, X> => {
     if (undefined === allow || null === allow || bool(allow)) {
       return allow as any;
     }
@@ -168,7 +161,7 @@ export function allow<I, X>(bool: (value: I) => boolean, failure: string) {
  * @return function a function ready to use in {@link #wrap}
  */
 export function transform<I, X>(transformer: (value: I) => X) {
-  return (value: I): I extends null | undefined ? X | null | undefined : X => {
+  return (value: I): TransferNullability<I, X> => {
     if (null === value || undefined === value) {
       return value as any;
     }
@@ -214,10 +207,7 @@ export namespace any {
   export const instance = <X, C>(constructor: { new (...args: any[]): C }) =>
     wrap(
       "any.instance",
-      allow<X, C>(
-        value => value instanceof constructor,
-        `value not an instance of ${constructor}`
-      )
+      allow<X, C>(value => value instanceof constructor, `value not an instance of ${constructor}`)
     );
 
   /**
@@ -246,13 +236,7 @@ export namespace str {
    * Check that the value is of the `string` type. It accepts empty strings as well.
    */
   export const is = <X>() =>
-    wrap(
-      "str.is",
-      allow<X, string>(
-        value => "string" === typeof value,
-        "value is not string"
-      )
-    );
+    wrap("str.is", allow<X, string>(value => "string" === typeof value, "value is not string"));
 
   /**
    * Check that the value is of the `string` type and non-empty.
@@ -272,10 +256,7 @@ export namespace str {
   export const min = <X extends string, N extends number>(min: N) =>
     wrap(
       "str.min",
-      allow<X, string>(
-        value => value.length >= min,
-        `value.length is lower than ${min}`
-      )
+      allow<X, string>(value => value.length >= min, `value.length is lower than ${min}`)
     );
 
   /**
@@ -284,19 +265,13 @@ export namespace str {
   export const max = <X extends string, N extends number>(max: N) =>
     wrap(
       "str.max",
-      allow<X, string>(
-        value => value.length <= max,
-        `value.length is greater than ${max}`
-      )
+      allow<X, string>(value => value.length <= max, `value.length is greater than ${max}`)
     );
 
   /**
    * Check that the string-based value has length in the closed range of `[min, max]`.
    */
-  export const length = <X extends string, L extends number, H extends number>(
-    min: L,
-    max: H
-  ) =>
+  export const length = <X extends string, L extends number, H extends number>(min: L, max: H) =>
     wrap(
       "str.length",
       allow<X, string>(
@@ -359,31 +334,21 @@ export namespace num {
   export const isNaN = <X>() =>
     wrap(
       "num.isNaN",
-      allow<X, number>(
-        value => "number" === typeof value,
-        "value is not a number type"
-      )
+      allow<X, number>(value => "number" === typeof value, "value is not a number type")
     );
 
   /**
    * Transform a string-based value into a number via the {@link Number} function.
    * It will return `NaN` if unable to parse!
    */
-  export const parse = <X extends string>(
-    parser: (value: X) => number = Number
-  ) => wrap("num.parse", transform<X, number>(value => parser(value)));
+  export const parse = <X extends string>(parser: (value: X) => number = Number) =>
+    wrap("num.parse", transform<X, number>(value => parser(value)));
 
   /**
    * Check that the number-based value is at least `min`.
    */
   export const min = <X extends number, N extends number>(min: N) =>
-    wrap(
-      "num.min",
-      allow<X, number>(
-        (value: number) => value >= min,
-        `value is less than ${min}`
-      )
-    );
+    wrap("num.min", allow<X, number>((value: number) => value >= min, `value is less than ${min}`));
 
   /**
    * Check that the number-based value is at most `max`.
@@ -391,20 +356,14 @@ export namespace num {
   export const max = <X extends number, N extends number>(max: N) =>
     wrap(
       "num.max",
-      allow<X, number>(
-        (value: number) => value <= max,
-        `value is greater than ${max}`
-      )
+      allow<X, number>((value: number) => value <= max, `value is greater than ${max}`)
     );
 
   /**
    * Transform a number-based value into an integer number via {@link Math#trunc}.
    */
   export const integer = <X extends number>() =>
-    wrap(
-      "num.integer",
-      transform<X, number>((value: number) => Math.trunc(value) as X)
-    );
+    wrap("num.integer", transform<X, number>((value: number) => Math.trunc(value) as X));
 }
 
 /**
@@ -420,41 +379,30 @@ export namespace bool {
   export const is = <X>() =>
     wrap(
       "bool.is",
-      allow<X, boolean>(
-        value => "boolean" === typeof value,
-        "value is not a boolean"
-      )
+      allow<X, boolean>(value => "boolean" === typeof value, "value is not a boolean")
     );
 
   /**
    * Check that the value is strictly `true`.
    */
-  export const truth = <X extends boolean>() =>
-    wrap(
-      "bool.truth",
-      allow<X, true>(value => true === value, "value is not true")
-    );
+  export const truth = () =>
+    wrap("bool.truth", allow<unknown, true>(value => true === value, "value is not true"));
 
   /**
    * Check that the value is strictly `false`.
    */
-  export const falseness = <X extends boolean>() =>
-    wrap(
-      "bool.falseness",
-      allow<X, false>(value => false === value, "value is not false")
-    );
+  export const falseness = () =>
+    wrap("bool.falseness", allow<unknown, false>(value => false === value, "value is not false"));
 
   /**
    * Transform any value into its truthy boolean equivalent.
    */
-  export const truthy = <X>() =>
-    wrap("bool.truthy", transform<X, boolean>(value => !!value));
+  export const truthy = <X>() => wrap("bool.truthy", transform<X, boolean>(value => !!value));
 
   /**
    * Transform any value into its falsy boolean equivalent.
    */
-  export const falsy = <X>() =>
-    wrap("bool.falsy", transform<X, boolean>(value => !value));
+  export const falsy = <X>() => wrap("bool.falsy", transform<X, boolean>(value => !value));
 }
 
 /**
@@ -482,13 +430,7 @@ export namespace array {
    * Check that the value is an {@link Array} via {@link Array#isArray}.
    */
   export const is = <X>() =>
-    wrap(
-      "array.is",
-      allow<X, unknown[]>(
-        value => Array.isArray(value),
-        "value is not an array"
-      )
-    );
+    wrap("array.is", allow<X, unknown[]>(value => Array.isArray(value), "value is not an array"));
 
   /**
    * Check that the array-based value is a homogenous array of items as validated
@@ -537,11 +479,7 @@ export namespace array {
       }
 
       if (reasons) {
-        throw new ValidationError(
-          "value is an array of invalid items",
-          value,
-          reasons
-        );
+        throw new ValidationError("value is an array of invalid items", value, reasons);
       }
 
       if (output) {
@@ -557,10 +495,7 @@ export namespace array {
   export const min = <Y, X extends Y[], N extends number>(min: N) =>
     wrap(
       "array.min",
-      allow<X, X>(
-        value => value.length >= min,
-        `value.length is smaller than ${min}`
-      )
+      allow<X, X>(value => value.length >= min, `value.length is smaller than ${min}`)
     );
 
   /**
@@ -569,21 +504,13 @@ export namespace array {
   export const max = <Y, X extends Y[], N extends number>(max: N) =>
     wrap(
       "array.max",
-      allow<X, X>(
-        value => value.length <= max,
-        `value.length is greater than ${max}`
-      )
+      allow<X, X>(value => value.length <= max, `value.length is greater than ${max}`)
     );
 
   /**
    * Check that the array-based value has length in the closed range of `[min, max]`.
    */
-  export const length = <
-    Y,
-    X extends Array<Y>,
-    L extends number,
-    H extends number
-  >(
+  export const length = <Y, X extends Array<Y>, L extends number, H extends number>(
     min: L,
     max: H
   ) =>
@@ -640,8 +567,7 @@ export namespace obj {
     wrap(
       "obj.number",
       allow<X, Number>(
-        value =>
-          null != value && "object" === typeof value && value instanceof Number,
+        value => null != value && "object" === typeof value && value instanceof Number,
         "value is not a Number object"
       )
     );
@@ -653,8 +579,7 @@ export namespace obj {
     wrap(
       "obj.string",
       allow<X, String>(
-        value =>
-          null != value && "object" === typeof value && value instanceof String,
+        value => null != value && "object" === typeof value && value instanceof String,
         "value is not a String object"
       )
     );
@@ -666,10 +591,7 @@ export namespace obj {
     wrap(
       "obj.boolean",
       allow<X, Boolean>(
-        value =>
-          null != value &&
-          "object" === typeof value &&
-          value instanceof Boolean,
+        value => null != value && "object" === typeof value && value instanceof Boolean,
         "value is not a Boolean object"
       )
     );
@@ -681,8 +603,7 @@ export namespace obj {
     wrap(
       "obj.array",
       allow<X, Array<unknown>>(
-        value =>
-          null != value && "object" === typeof value && value instanceof Array,
+        value => null != value && "object" === typeof value && value instanceof Array,
         "value is not an Array object"
       )
     );
@@ -701,9 +622,7 @@ export namespace obj {
           ? number
           : (X extends String
               ? string
-              : (X extends Boolean
-                  ? boolean
-                  : (X extends (infer E)[] ? E[] : object)))
+              : (X extends Boolean ? boolean : (X extends (infer E)[] ? E[] : object)))
       >(value => value.valueOf() as any)
     );
 
@@ -771,11 +690,7 @@ export namespace obj {
       }
 
       if (reasons) {
-        throw new ValidationError(
-          "value does not match structure",
-          value,
-          reasons
-        );
+        throw new ValidationError("value does not match structure", value, reasons);
       }
 
       return output;
@@ -786,13 +701,8 @@ export namespace obj {
    * Transform an object by adding default values to the obeject. Always creates a copy
    * of the object.
    */
-  export const defaults = <X extends object>(
-    defaults: { [K in keyof X]?: X[K] }
-  ) =>
-    wrap(
-      "obj.defaults",
-      transform<X, X>(value => Object.assign({}, defaults, value))
-    );
+  export const defaults = <X extends object>(defaults: { [K in keyof X]?: X[K] }) =>
+    wrap("obj.defaults", transform<X, X>(value => Object.assign({}, defaults, value)));
 
   /**
    * Allow only one of the keys in the list to be present on the object. Presence

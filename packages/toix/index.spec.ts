@@ -9,10 +9,7 @@ function equality(a: any, b: any): boolean {
   }
 
   if (Array.isArray(a) && Array.isArray(b)) {
-    return (
-      a.length === b.length &&
-      a.reduce((a, i, index) => a && i == b[index], true)
-    );
+    return a.length === b.length && a.reduce((a, i, index) => a && i == b[index], true);
   }
 
   if (a instanceof Date && b instanceof Date) {
@@ -200,10 +197,7 @@ describe("toix", () => {
 
     describe("guid({ version: 4, allowNil: true })", () => {
       assert(toix.str.guid({ version: 4, allowNil: true }), {
-        positive: [
-          "00000000-0000-4000-0000-000000000000",
-          "00000000-0000-0000-0000-000000000000"
-        ],
+        positive: ["00000000-0000-4000-0000-000000000000", "00000000-0000-0000-0000-000000000000"],
         negative: [
           "00000000-0000-1000-0000-000000000000",
           "00000000-0000-2000-0000-000000000000",
@@ -225,11 +219,7 @@ describe("toix", () => {
 
     describe("hostname()", () => {
       assert(toix.str.hostname(), {
-        positive: [
-          "google.com",
-          "example.com.mk",
-          "xn--80apaahi7a3c.xn--d1alf"
-        ],
+        positive: ["google.com", "example.com.mk", "xn--80apaahi7a3c.xn--d1alf"],
         negative: [
           "кирилица.мкд",
           " google.com ",
@@ -250,21 +240,12 @@ describe("toix", () => {
           "http://www.google.com/imghp",
           "http://g.co"
         ],
-        negative: [
-          "www.google",
-          "www.google#.com",
-          "www.google-.co",
-          "www.-google.co"
-        ]
+        negative: ["www.google", "www.google#.com", "www.google-.co", "www.-google.co"]
       });
 
       assert(toix.str.url({ protocol: "http:" }), {
         positive: ["http://google.com", "http://yahoo.com"],
-        negative: [
-          "https://google.com",
-          "https://yahoo.com",
-          "ftp://google.com"
-        ]
+        negative: ["https://google.com", "https://yahoo.com", "ftp://google.com"]
       });
 
       assert(toix.str.url({ port: "443" }), {
@@ -418,20 +399,7 @@ describe("toix", () => {
           "1111222233==",
           "11112222333="
         ],
-        negative: [
-          "X",
-          "XX",
-          "XXX",
-          "#",
-          "____",
-          "----",
-          "==",
-          "=",
-          "====",
-          "X===",
-          "X==",
-          "X="
-        ]
+        negative: ["X", "XX", "XXX", "#", "____", "----", "==", "=", "====", "X===", "X==", "X="]
       });
     });
 
@@ -452,18 +420,7 @@ describe("toix", () => {
           "111122==",
           "____--=="
         ],
-        negative: [
-          "X",
-          "#",
-          "////",
-          "++++",
-          "==",
-          "=",
-          "====",
-          "X===",
-          "X==",
-          "X="
-        ]
+        negative: ["X", "#", "////", "++++", "==", "=", "====", "X===", "X==", "X="]
       });
     });
 
@@ -474,9 +431,7 @@ describe("toix", () => {
 
       try {
         toix.str.isbase32("z-base" as any);
-        throw new Error(
-          "Allowed the use of z-base-32 encoding but it is not implemented."
-        );
+        throw new Error("Allowed the use of z-base-32 encoding but it is not implemented.");
       } catch (error) {}
 
       assert(toix.str.isbase32(), {

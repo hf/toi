@@ -41,10 +41,7 @@ function equality(a: any, b: any): boolean {
   }
 
   if (Array.isArray(a) && Array.isArray(b)) {
-    return (
-      a.length === b.length &&
-      a.reduce((a, i, index) => a && equality(i, b[index]), true)
-    );
+    return a.length === b.length && a.reduce((a, i, index) => a && equality(i, b[index]), true);
   }
 
   if (a instanceof Date && b instanceof Date) {
@@ -195,8 +192,7 @@ describe("dynamo", () => {
           [{ N: "1.1" }, "1.1"],
           [
             {
-              N:
-                "1.1111111111111111111111111111111111111111111111111111111111111111"
+              N: "1.1111111111111111111111111111111111111111111111111111111111111111"
             },
             "1.1111111111111111111111111111111111111111111111111111111111111111"
           ],
@@ -263,10 +259,7 @@ describe("dynamo", () => {
   describe("bin", () => {
     describe("is()", () => {
       transform(dynamo.bin.is(), {
-        positive: [
-          [{ B: "" }, Buffer.alloc(0)],
-          [{ B: "abcd" }, Buffer.from("abcd", "base64")]
-        ],
+        positive: [[{ B: "" }, Buffer.alloc(0)], [{ B: "abcd" }, Buffer.from("abcd", "base64")]],
         negative: [
           { N: "1" },
           { S: "x" },
