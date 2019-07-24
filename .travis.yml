@@ -14,9 +14,6 @@ jobs:
         - yarn coverage
         - codecov
         - yarn prettier
-        - bash scripts/detect-changes.sh toi
-        - bash scripts/detect-changes.sh toix
-        - bash scripts/detect-changes.sh dynamo
     - stage: deploy
       script:
         - yarn install --pure-lockfile
