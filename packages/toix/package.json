@@ -1,8 +1,11 @@
 {
   "name": "@toi/toix",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Extra validators for Toi.",
   "main": "build/index.js",
+  "engines": {
+    "node": ">=6.13"
+  },
   "files": [
     "build/**/*.{js,js.map,d.ts,d.ts.map}",
     "index.ts",
@@ -30,15 +33,13 @@
   "license": "MIT",
   "dependencies": {
     "@toi/toi": "^1.0.0",
-    "isemail": "^3.2.0",
-    "node": ">=10.0.0"
+    "isemail": "^3.2.0"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
-    "node": ">=10.0.0",
     "nyc": "^13.0.1",
     "prettier": "^1.17.1",
     "proxyquire": "^2.1.0",
