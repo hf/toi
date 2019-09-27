@@ -4,7 +4,7 @@
   "description": "Extra validators for Toi.",
   "main": "build/index.js",
   "engines": {
-    "node" : ">6.13"
+    "node" : ">=6.13"
   },
   "files": [
     "build/**/*.{js,js.map,d.ts,d.ts.map}",
