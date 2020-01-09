@@ -228,7 +228,7 @@ describe("toi", () => {
 
     describe("isInteger", () => {
       assert(toi.num.isInteger(), {
-        positive: [0, 1, -1],
+        positive: [0, 0.0, -0.0, 1.0, -1.0, 1.0, -1.0, 1, -1],
         negative: [0.1, -0.1, NaN, false, "", "-1", "0", "1", {}, [], new Number(0)]
       });
     });
