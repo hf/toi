@@ -32,7 +32,7 @@
   "author": "Stojan Dimitrovski <sdimitrovski@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@toi/toi": "^1.0.0",
+    "@toi/toi": "^1.2.0",
     "isemail": "^3.2.0"
   },
   "devDependencies": {
