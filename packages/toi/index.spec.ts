@@ -226,6 +226,13 @@ describe("toi", () => {
       });
     });
 
+    describe("isInteger", () => {
+      assert(toi.num.isInteger(), {
+        positive: [0, 1, -1],
+        negative: [0.1, -0.1, NaN, false, "", "-1", "0", "1", {}, [], new Number(0)]
+      });
+    });
+
     describe("min(1)", () => {
       assert(toi.num.min(1), {
         positive: [1, 2],
