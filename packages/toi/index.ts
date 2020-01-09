@@ -338,6 +338,18 @@ export namespace num {
     );
 
   /**
+   * Check that the value is an integer.
+   */
+  export const isInteger = <X>() =>
+    wrap(
+      "num.isInteger",
+      allow<X, number>(
+        value => "number" === typeof value && Number.isInteger(value),
+        "value is not an integer"
+      )
+    );
+
+  /**
    * Transform a string-based value into a number via the {@link Number} function.
    * It will return `NaN` if unable to parse but you can pass in throwOnNaN as an option.
    */
