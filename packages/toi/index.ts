@@ -331,10 +331,22 @@ export namespace num {
   /**
    * Check that the value is a `number` including `NaN`.
    */
-  export const isNaN = <X>() =>
+  export const isNumberType = <X>() =>
     wrap(
       "num.isNaN",
       allow<X, number>(value => "number" === typeof value, "value is not a number type")
+    );
+
+  /**
+   * Check that the value is `NaN`.
+   */
+  export const isNaN = <X>() =>
+    wrap(
+      "num.isNaN",
+      allow<X, number>(
+        value => "number" === typeof value && Number.isNaN(value),
+        "value is not NaN"
+      )
     );
 
   /**

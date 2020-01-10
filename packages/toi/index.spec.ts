@@ -219,10 +219,17 @@ describe("toi", () => {
       });
     });
 
-    describe("isNaN", () => {
-      assert(toi.num.isNaN(), {
+    describe("isNumberType", () => {
+      assert(toi.num.isNumberType(), {
         positive: [0, 1, -1, NaN],
         negative: [false, "", "-1", "0", "1", {}, [], new Number(0)]
+      });
+    });
+
+    describe("isNaN", () => {
+      assert(toi.num.isNaN(), {
+        positive: [NaN],
+        negative: [0, 1, -1, 0.1, -0.1, false, "", "-1", "0", "1", {}, [], new Number(0)]
       });
     });
 
