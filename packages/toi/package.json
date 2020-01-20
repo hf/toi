@@ -38,7 +38,7 @@
     "proxyquire": "^2.1.0",
     "source-map-support": "^0.5.9",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.0"
+    "typescript": "^3.7.5"
   },
   "nyc": {
     "include": [
