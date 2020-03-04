@@ -689,10 +689,11 @@ export namespace obj {
         return value;
       }
 
+      let hasReasons = false;
       const reasons: {
         [key: string]: ValidationError;
         [key: number]: ValidationError;
-      } | null = {};
+      } = {};
 
       const output: any = {};
 
@@ -734,6 +735,7 @@ export namespace obj {
         } catch (error) {
           isError(error, ValidationError, () => {
             reasons[key] = error;
+            hasReasons = true;
           });
         }
       }
@@ -747,12 +749,13 @@ export namespace obj {
           } catch (error) {
             isError(error, ValidationError, () => {
               reasons[key] = error;
+              hasReasons = true;
             });
           }
         }
       }
 
-      if (reasons) {
+      if (hasReasons) {
         throw new ValidationError("value does not match structure", value, reasons);
       }
 
