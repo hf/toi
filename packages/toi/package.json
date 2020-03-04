@@ -1,6 +1,6 @@
 {
   "name": "@toi/toi",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Toi is a validator for TypeScript.",
   "main": "build/index.js",
   "files": [

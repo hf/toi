@@ -689,10 +689,10 @@ export namespace obj {
         return value;
       }
 
-      let reasons: {
+      const reasons: {
         [key: string]: ValidationError;
         [key: number]: ValidationError;
-      } | null = null;
+      } | null = {};
 
       const output: any = {};
 
@@ -733,10 +733,6 @@ export namespace obj {
           }
         } catch (error) {
           isError(error, ValidationError, () => {
-            if (!reasons) {
-              reasons = {};
-            }
-
             reasons[key] = error;
           });
         }
@@ -750,10 +746,6 @@ export namespace obj {
             }
           } catch (error) {
             isError(error, ValidationError, () => {
-              if (!reasons) {
-                reasons = {};
-              }
-
               reasons[key] = error;
             });
           }
