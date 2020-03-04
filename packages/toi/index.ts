@@ -647,30 +647,42 @@ export namespace obj {
     );
 
   /**
-   * Checks that the object obeys a strict structure of properties and property-level validators.
+   * Checks that the object obeys a strict structure of properties and property-level validators. The structure needs to define all properties in a plain JavaScript object and its prototype chain is not inspected.
    *
    * It is a strict 1:1 validation. Keys not found on the value will trigger a {@link ValidationError},
-   * including keys found in the `value` but not in the structure.
+   * including keys found in the `value` but not in the structure. This excludes non-enumerable properties (like `toString` or other built-in functions) or properties defined on symbols.
+   * You can disable this strict 1:1 mapping by setting the `lenient` option to `true.
    *
-   * The `value` is never returned as-is, but is made a copy of with the own properties according to
+   * The prototype chain of the passed value will be walked and inherited properties will be validated. You can disable this by setting the `own` option to `true`.
+   *
+   * The `value` is never returned as-is, but is made a copy of with the properties according to
    * the defined `structure`. Therefore, the property-level validators may transform the property
    * values. This safeguards from `instanceof` checks, including prototype-hijacking and similar
-   * issues.
+   * issues. The returned value will always have the Object prototype, as the prototype chain is not copied.
    *
    * @param structure the definition structure of the object
-   * @param options the validation options, like optional (missing) fields
+   * @param options the validation options
    */
-  export const keys = <X extends object, Y>(
+  export const keys = <X extends object, Y, M extends Y>(
     structure: { [K in keyof Y]: Validator<any, Y[K]> },
-    options?: { missing?: (keyof Y)[] }
+    options?: {
+      /** Set the keys that may be missing in the value. */
+      missing?: (keyof M)[];
+      /** Only validate the value's own properties and ignore inherited properties. */
+      own?: boolean;
+      /** Don't validate that value matches 1:1 with the structure. */
+      lenient?: boolean;
+    }
   ) => {
-    const missing: { [key in keyof Y]?: true } = {};
+    const missing: { [key in keyof M]?: true } = {};
 
     if (options && options.missing && options.missing.length > 0) {
       for (let i = 0; i < options.missing.length; i += 1) {
         missing[options.missing[i]] = true;
       }
     }
+
+    const walkPrototype = !options || !options.own;
 
     return wrap<X, Y>("obj.keys", value => {
       if (null === value || undefined === value) {
@@ -686,17 +698,38 @@ export namespace obj {
 
       for (let key in structure) {
         try {
-          if (!Object.getOwnPropertyDescriptor(value, key)) {
-            if (!missing[key]) {
-              throw new ValidationError(`key ${key} in value is missing`, key);
+          let inspect: any = value;
+
+          do {
+            if (!Object.prototype.hasOwnProperty.call(inspect, key)) {
+              if ((missing as any)[key]) {
+                // still run the validator even if the value is missing, so that if
+                // someone has said that the key can be missing but they've put a required validator
+                // the validation will fail
+                output[key] = (structure as any)[key]((inspect as any)[key]);
+                break;
+              } else if (!walkPrototype) {
+                // value is not allowed to be missing, and we're not allowed
+                // to walk the prototype chain to find the value
+                // therefore this validation must fail
+                throw new ValidationError(`own key ${key} in value is missing`, key);
+              } else {
+                // we're allowed to walk the prototype and we're not allowed to
+                // have this property missing, so we're going to try and find it
+                // in the prototype chain... when we don't find it there we'll
+                // exit this loop and throw a validation error that we couldn't
+                // find it
+              }
             } else {
-              // still run the validator even if the value is missing, so that if
-              // someone has said that the key can be missing but they've put a required validator
-              // the validation will fail
-              output[key] = (structure as any)[key]((value as any)[key]);
+              output[key] = (structure as any)[key]((inspect as any)[key]);
+              break;
             }
-          } else {
-            output[key] = (structure as any)[key]((value as any)[key]);
+
+            inspect = Object.getPrototypeOf(inspect);
+          } while (walkPrototype && null !== inspect);
+
+          if (walkPrototype && null === inspect) {
+            throw new ValidationError(`key ${key} in value (and prototype chain) is missing`, key);
           }
         } catch (error) {
           isError(error, ValidationError, () => {
@@ -706,6 +739,24 @@ export namespace obj {
 
             reasons[key] = error;
           });
+        }
+      }
+
+      if (!options || !options.lenient) {
+        for (let key in value) {
+          try {
+            if (!Object.prototype.hasOwnProperty.call(structure, key)) {
+              throw new ValidationError(`key ${key} found in value but not in structure`, key);
+            }
+          } catch (error) {
+            isError(error, ValidationError, () => {
+              if (!reasons) {
+                reasons = {};
+              }
+
+              reasons[key] = error;
+            });
+          }
         }
       }
 
