@@ -5,3 +5,5 @@ coverage
 *.lock
 .nyc_output
 .npmrc
+.vimrc
+*.swp

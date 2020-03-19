@@ -366,8 +366,15 @@ describe("toi", () => {
           b: toi.required().and(toi.num.is())
         }),
         {
-          positive: [{ a: "", b: 0 }, { a: "hello", b: 2 }, { a: "a", b: 0, c: "c" }],
-          negative: [{ a: 0, b: 0 }, { a: "hello", b: "world" }, {}, { a: "hello" }, { b: 0 }]
+          positive: [{ a: "", b: 0 }, { a: "hello", b: 2 }],
+          negative: [
+            { a: "a", b: 0, c: "c" },
+            { a: 0, b: 0 },
+            { a: "hello", b: "world" },
+            {},
+            { a: "hello" },
+            { b: 0 }
+          ]
         }
       );
     });
@@ -415,34 +422,97 @@ describe("toi", () => {
       });
     });
 
-    describe("keys({ a: toi.num.is(), b: toi.num.is() }, { missing: { a: true } })", () => {
-      assert(
-        toi.obj.keys(
-          {
-            a: toi.num.is(),
-            b: toi.num.is()
-          },
-          { missing: ["a"] }
-        ),
+    describe("keys({ a: toi.num.is(), b: toi.num.is() }, { missing: ['a'] })", () => {
+      const validator = toi.obj.keys(
         {
-          positive: [{ a: 0, b: 0 }, { b: 0 }],
-          negative: [{ a: 0 }, {}]
+          a: toi.num.is(),
+          b: toi.num.is()
+        },
+        { missing: ["a"] }
+      );
+
+      assert(validator, {
+        positive: [{ a: 0, b: 0 }, { b: 0 }],
+        negative: [{ a: 0 }, {}]
+      });
+    });
+
+    describe("keys({ a: toi.required().and(toi.num.is()), b: toi.num.is() }, { missing: ['a']} })", () => {
+      const validator = toi.obj.keys(
+        {
+          a: toi.required().and(toi.num.is()),
+          b: toi.num.is()
+        },
+        { missing: ["a"] }
+      );
+
+      assert(validator, {
+        positive: [{ a: 0, b: 0 }],
+        negative: [{ a: 0 }, { b: 0 }, {}]
+      });
+    });
+
+    describe("keys({ a: toi.required().and(toi.num.is()), b: toi.required().and(toi.func.is()) })", () => {
+      class B {
+        b() {
+          return 1;
+        }
+      }
+
+      class A extends B {
+        a = 1;
+      }
+
+      assert(
+        toi.obj.keys({
+          a: toi.required().and(toi.num.is()),
+          b: toi.required().and(toi.func.is())
+        }),
+        {
+          positive: [new A(), { a: 1, b: () => 1 }],
+          negative: [new B(), {}, { a: 1 }, { b: 1 }, { a: 1, b: 1 }]
         }
       );
     });
 
-    describe("keys({ a: toi.required().and(toi.num.is()), b: toi.num.is() }, { missing: { a: true } })", () => {
+    describe("keys({ a: toi.required().and(toi.num.is()), b: toi.required().and(toi.func.is()) }, { own: true })", () => {
+      class B {
+        b() {
+          return 1;
+        }
+      }
+
+      class A extends B {
+        a = 1;
+      }
+
       assert(
         toi.obj.keys(
           {
             a: toi.required().and(toi.num.is()),
-            b: toi.num.is()
+            b: toi.required().and(toi.func.is())
           },
-          { missing: ["a"] }
+          { own: true }
         ),
         {
-          positive: [{ a: 0, b: 0 }],
-          negative: [{ a: 0 }, { b: 0 }, {}]
+          positive: [{ a: 1, b: () => 1 }],
+          negative: [new A(), new B(), {}, { a: 1 }, { b: 1 }, { a: 1, b: 1 }]
+        }
+      );
+    });
+
+    describe("keys({ a: toi.required().and(toi.num.is()), b: toi.required().and(toi.str.is()) }, { lenient: true })", () => {
+      assert(
+        toi.obj.keys(
+          {
+            a: toi.required().and(toi.num.is()),
+            b: toi.required().and(toi.str.is())
+          },
+          { lenient: true }
+        ),
+        {
+          positive: [{ a: 1, b: "1" }, { a: 1, b: "1", c: "2" }],
+          negative: [{}, { a: 1 }, { b: "1" }, { a: "1", b: "1" }, { c: 1 }]
         }
       );
     });
