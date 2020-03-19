@@ -665,14 +665,14 @@ export namespace obj {
    */
   export const keys = <X extends object, Y, M extends Y>(
     structure: { [K in keyof Y]: Validator<any, Y[K]> },
-    options?: {
+    options: {
       /** Set the keys that may be missing in the value. */
       missing?: (keyof M)[];
       /** Only validate the value's own properties and ignore inherited properties. */
       own?: boolean;
       /** Don't validate that value matches 1:1 with the structure. */
       lenient?: boolean;
-    }
+    } = {}
   ) => {
     const missing: { [key in keyof M]?: true } = {};
 
@@ -682,7 +682,7 @@ export namespace obj {
       }
     }
 
-    const walkPrototype = !options || !options.own;
+    const walkPrototype = !options.own;
 
     return wrap<X, Y>("obj.keys", value => {
       if (null === value || undefined === value) {
@@ -740,7 +740,7 @@ export namespace obj {
         }
       }
 
-      if (!options || !options.lenient) {
+      if (!options.lenient) {
         for (let key in value) {
           try {
             if (!Object.prototype.hasOwnProperty.call(structure, key)) {
