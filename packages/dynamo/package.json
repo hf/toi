@@ -36,7 +36,7 @@
     "@toi/toix": "^1.0.13"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.5",
+    "@types/mocha": "^8.0.1",
     "@types/node": "^10.0.0",
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
